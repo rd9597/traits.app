@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import AdminAnalyticsClient from './admin-analytics-client'
 
 export const dynamic = 'force-dynamic'
 
@@ -93,6 +94,7 @@ export default async function AdminAnalyticsPage() {
   ]
 
   return (
+  <AdminAnalyticsClient>
     <main className="min-h-screen bg-black px-5 py-8 text-white">
       <section className="mx-auto w-full max-w-md">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/35">
@@ -132,5 +134,6 @@ export default async function AdminAnalyticsPage() {
         </div>
       </section>
     </main>
+  </AdminAnalyticsClient>
   )
 }
