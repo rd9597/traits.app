@@ -122,7 +122,7 @@ export default async function RevealPage({ params }: PageProps) {
 
         <Link
           href={`https://wa.me/?text=${encodeURIComponent(
-            `My friends see me as:\n\n${topTrait?.label}\n\nWhat would your friends choose for you?\n\n${appUrl}/mirror/${slug}`,
+            `My friends see me as:\n\n${topTrait?.label}\n\nWhat would your friends choose for you?\n\n${appUrl}/reveal/${slug}`,
           )}`}
           target="_blank"
           className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
