@@ -17,6 +17,8 @@ type TraitCount = {
 export default async function RevealPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || 'https://traits-app-gold.vercel.app'
 
   const { data: mirror } = await supabase
     .from('mirrors')
@@ -117,15 +119,16 @@ export default async function RevealPage({ params }: PageProps) {
             Your friends did not answer a personality test. They picked the traits they actually felt from you.
           </p>
         </div>
+
         <Link
           href={`https://wa.me/?text=${encodeURIComponent(
-           `My friends see me as:\n\n${topTrait?.label}\n\nWhat would your friends choose for you?\n\n${process.env.NEXT_PUBLIC_APP_URL}/mirror/${slug}`
+            `My friends see me as:\n\n${topTrait?.label}\n\nWhat would your friends choose for you?\n\n${appUrl}/mirror/${slug}`,
           )}`}
           target="_blank"
           className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-       >
+        >
           Share My Result
-       </Link>
+        </Link>
       </section>
     </main>
   )
