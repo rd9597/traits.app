@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import ResultCtaButton from './result-cta-button'
 
 type PageProps = {
   params: Promise<{
@@ -27,6 +27,12 @@ export default async function ResultPage({ params }: PageProps) {
   if (!mirror || mirror.is_removed) {
     notFound()
   }
+
+  await supabase.from('analytics_events').insert({
+    event_type: 'result_opened',
+    mirror_slug: slug,
+    metadata: {},
+  })
 
   const { data: traits } = await supabase
     .from('mirror_traits')
@@ -92,12 +98,7 @@ export default async function ResultPage({ params }: PageProps) {
           </div>
 
           <div className="mt-auto">
-            <Link
-              href="/create"
-              className="block w-full rounded-full bg-lime-400 px-6 py-5 text-center text-lg font-medium text-black"
-            >
-              unlock your mirror
-            </Link>
+            <ResultCtaButton slug={slug} />
 
             <p className="mt-5 text-center font-mono text-sm tracking-wider text-white/35">
               traits-app-gold.vercel.app

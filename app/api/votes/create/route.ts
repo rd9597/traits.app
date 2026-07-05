@@ -75,7 +75,7 @@ export async function POST(req: Request) {
       mirror_id: mirrorId,
       trait_id: traitId,
       voter_key: voterKey,
-    })
+   })
 
     if (error) {
       return NextResponse.json(
@@ -84,7 +84,17 @@ export async function POST(req: Request) {
       )
     }
 
-    return NextResponse.json({ ok: true })
+    await supabase.from('analytics_events').insert({
+      event_type: 'trait_submitted',
+      mirror_slug: null,
+      metadata: {
+        mirrorId,
+        traitId,
+    
+      },
+    })
+
+return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json(
       { error: 'Trait submit failed. Try again.' },
