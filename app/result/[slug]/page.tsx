@@ -14,6 +14,19 @@ type TraitCount = {
   count: number
 }
 
+function getTraitMeaning(label: string) {
+  const meanings: Record<string, string> = {
+    'Group glue': 'The person holding the group together.',
+    'Therapist friend': 'The person everyone trusts with their real feelings.',
+    'Loyal backup': 'The one who quietly shows up when it matters.',
+    'Silent supporter': 'The calm presence people feel safe around.',
+    'Energy lifter': 'The one who changes the mood when they enter.',
+    'Safe place': 'The person people feel comfortable being real with.',
+  }
+
+  return meanings[label] || 'The trait your friends strongly feel from you.'
+}
+
 export default async function ResultPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
@@ -49,78 +62,47 @@ export default async function ResultPage({ params }: PageProps) {
     .sort((a, b) => b.count - a.count)
 
   const topTrait = rankedTraits[0]
-  const secondaryTraits = rankedTraits.slice(1, 3)
 
   return (
     <main className="min-h-screen bg-black px-5 py-8 text-white">
       <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-lime-400">
-          Friends picked this trait
-        </p>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 py-8 shadow-[0_0_80px_rgba(163,230,53,0.12)]">
+          <p className="text-center text-xs font-black uppercase tracking-[0.28em] text-lime-400">
+            Your friends see you as
+          </p>
 
-        <h1 className="mt-5 text-3xl font-black leading-tight tracking-tight">
-          What's their trait?
-        </h1>
+          <h1 className="mt-8 text-center text-6xl font-black uppercase leading-[0.9] tracking-tight text-lime-400">
+            {topTrait?.label || 'Unknown Trait'}
+          </h1>
 
-        {topTrait ? (
-          <div className="mt-8 rounded-3xl border border-lime-400/40 bg-lime-400 px-5 py-6 text-black">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
-              Main trait
-            </p>
+          <p className="mt-6 text-center text-lg font-bold leading-7 text-white/85">
+            {topTrait
+              ? getTraitMeaning(topTrait.label)
+              : 'Your trait will appear after friends pick it.'}
+          </p>
 
-            <h2 className="mt-4 text-4xl font-black leading-none tracking-tight">
-              {topTrait.label}
-            </h2>
+          <div className="my-8 border-t border-dashed border-lime-400/40" />
 
-            <p className="mt-5 text-sm font-bold leading-6 text-black/70">
-              This is the trait friends picked the most.
-            </p>
+          <p className="text-center text-xl font-black leading-8 text-white">
+            {topTrait?.count || 0} friend
+            {topTrait?.count !== 1 ? 's' : ''}{' '}
+            <span className="text-lime-400">independently</span> picked this
+            trait.
+          </p>
 
-            <p className="mt-4 text-sm font-black text-black">
-              Picked {topTrait.count} time
-              {topTrait.count !== 1 ? 's' : ''}
-            </p>
-          </div>
-        ) : null}
+          <div className="my-8 border-t border-dashed border-lime-400/40" />
 
-        {secondaryTraits.length > 0 ? (
-          <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">
-              Also noticed
-            </p>
+          <p className="text-center text-2xl font-black leading-9 tracking-tight text-white">
+            What trait would your friends pick for you?
+          </p>
 
-            <div className="mt-4 space-y-3">
-              {secondaryTraits.map((trait) => (
-                <div
-                  key={trait.id}
-                  className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3"
-                >
-                  <p className="text-sm font-black">
-                    {trait.label}
-                  </p>
-
-                  <p className="text-xs font-bold text-lime-400">
-                    {trait.count}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        <Link
-          href={`/mirror/${slug}`}
-          className="mt-6 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-        >
-          Pick Their Trait
-        </Link>
-
-        <Link
-          href="/create"
-          className="mt-3 block w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center text-sm font-black text-white"
-        >
-          Find Your Trait
-        </Link>
+          <Link
+            href="/create"
+            className="mt-8 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-base font-black text-black"
+          >
+            Find Your Trait
+          </Link>
+        </div>
       </section>
     </main>
   )
