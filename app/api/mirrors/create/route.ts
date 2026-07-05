@@ -189,15 +189,22 @@ export async function POST(req: Request) {
       )
     }
 
-    await supabase.from('analytics_events').insert({
-      event_type: 'mirror_created',
-      mirror_slug: mirror.slug,
-      metadata: {
-        category,
-        tone,
-        language,
-      }, 
-    })
+    const { error: analyticsError } = await supabase
+      .from('analytics_events')
+      .insert({
+        event_type: 'mirror_created',
+        mirror_slug: mirror.slug,
+        metadata: {
+          category,
+          tone,
+          language,
+        
+        },
+      })
+
+    if (analyticsError) {
+       console.error('mirror_created analytics failed:', analyticsError.message)
+   }
 
     return NextResponse.json({
       slug: mirror.slug,

@@ -5,9 +5,11 @@ type TraitWithMirror = {
   id: string
   mirrors:
     | {
+        slug: string
         expires_at: string | null
       }
     | {
+        slug: string
         expires_at: string | null
       }[]
     | null
@@ -31,16 +33,13 @@ export async function POST(req: Request) {
 
     const { data: trait } = await supabase
       .from('mirror_traits')
-      .select('id, mirrors!inner(expires_at)')
+      .select('id, mirrors!inner(slug, expires_at)')
       .eq('id', traitId)
       .eq('mirror_id', mirrorId)
       .single<TraitWithMirror>()
 
     if (!trait) {
-      return NextResponse.json(
-        { error: 'Invalid trait.' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Invalid trait.' }, { status: 400 })
     }
 
     const mirror = Array.isArray(trait.mirrors)
@@ -75,7 +74,7 @@ export async function POST(req: Request) {
       mirror_id: mirrorId,
       trait_id: traitId,
       voter_key: voterKey,
-   })
+    })
 
     if (error) {
       return NextResponse.json(
@@ -84,17 +83,22 @@ export async function POST(req: Request) {
       )
     }
 
-    await supabase.from('analytics_events').insert({
-      event_type: 'trait_submitted',
-      mirror_slug: null,
-      metadata: {
-        mirrorId,
-        traitId,
-    
-      },
-    })
+    const { error: analyticsError } = await supabase
+      .from('analytics_events')
+      .insert({
+        event_type: 'trait_submitted',
+        mirror_slug: mirror?.slug ?? null,
+        metadata: {
+          mirrorId,
+          traitId,
+        },
+      })
 
-return NextResponse.json({ ok: true })
+    if (analyticsError) {
+      console.error('trait_submitted analytics failed:', analyticsError.message)
+    }
+
+    return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json(
       { error: 'Trait submit failed. Try again.' },

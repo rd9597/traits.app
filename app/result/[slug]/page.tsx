@@ -61,7 +61,7 @@ export default async function ResultPage({ params }: PageProps) {
   return (
     <main className="min-h-screen bg-[#1c1c1a] px-5 py-8 text-white">
       <section className="mx-auto flex min-h-[85vh] w-full max-w-md items-center justify-center">
-        <div className="relative flex min-h-[680px] w-full flex-col rounded-[2.5rem] bg-[#07070d] px-7 py-8 shadow-[0_0_70px_rgba(163,230,53,0.14)]">
+        <div className="relative flex min-h-170 w-full flex-col rounded-[2.5rem] bg-[#07070d] px-7 py-8 shadow-[0_0_70px_rgba(163,230,53,0.14)]">
           <div>
             <p className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
               <span className="h-3 w-3 rounded-full bg-lime-400" />

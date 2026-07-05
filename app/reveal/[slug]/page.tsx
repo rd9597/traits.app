@@ -32,11 +32,15 @@ export default async function RevealPage({ params }: PageProps) {
     notFound()
   }
 
-  await supabase.from('analytics_events').insert({
+  const { error: revealAnalyticsError } = await supabase
+  .from('analytics_events')
+  .insert({
     event_type: 'reveal_opened',
     mirror_slug: slug,
     metadata: {},
   })
+
+console.log('reveal_opened error:', revealAnalyticsError)
 
   const { data: traits } = await supabase
     .from('mirror_traits')
