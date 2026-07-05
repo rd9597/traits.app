@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Link from 'next/link'
+import ShareResultButton from './share-result-button'
 
 type PageProps = {
   params: Promise<{
@@ -31,6 +31,12 @@ export default async function RevealPage({ params }: PageProps) {
   if (!mirror || mirror.is_removed) {
     notFound()
   }
+
+  await supabase.from('analytics_events').insert({
+    event_type: 'reveal_opened',
+    mirror_slug: slug,
+    metadata: {},
+  })
 
   const { data: traits } = await supabase
     .from('mirror_traits')
@@ -125,15 +131,11 @@ export default async function RevealPage({ params }: PageProps) {
           </p>
         </div>
 
-        <Link
-          href={`https://wa.me/?text=${encodeURIComponent(
-            `My friends see me as:\n\n${topTrait?.label}\n\nWhat's your trait?\n\n${appUrl}/result/${slug}`,
-          )}`}
-          target="_blank"
-          className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-        >
-          Share My Result
-        </Link>
+        <ShareResultButton
+          slug={slug}
+          appUrl={appUrl}
+          topTraitLabel={topTrait?.label}
+        />
       </section>
     </main>
   )
