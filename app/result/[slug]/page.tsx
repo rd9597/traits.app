@@ -1,6 +1,6 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Link from 'next/link'
 
 type PageProps = {
   params: Promise<{
@@ -14,13 +14,9 @@ type TraitCount = {
   count: number
 }
 
-export default async function RevealPage({ params }: PageProps) {
+export default async function ResultPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
-
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    'https://traits-app-gold.vercel.app'
 
   const { data: mirror } = await supabase
     .from('mirrors')
@@ -51,31 +47,25 @@ export default async function RevealPage({ params }: PageProps) {
     }))
     .filter((trait) => trait.count > 0)
     .sort((a, b) => b.count - a.count)
-    .slice(0, 3)
 
-  const totalTraits = votes?.length || 0
   const topTrait = rankedTraits[0]
-  const secondaryTraits = rankedTraits.slice(1)
+  const secondaryTraits = rankedTraits.slice(1, 3)
 
   return (
     <main className="min-h-screen bg-black px-5 py-8 text-white">
       <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-lime-400">
-          Reveal unlocked
+          Friends picked this trait
         </p>
 
         <h1 className="mt-5 text-3xl font-black leading-tight tracking-tight">
-          Your Mirror says...
+          What's their trait?
         </h1>
-
-        <p className="mt-3 text-sm leading-6 text-white/50">
-          Based on {totalTraits} anonymous traits from friends.
-        </p>
 
         {topTrait ? (
           <div className="mt-8 rounded-3xl border border-lime-400/40 bg-lime-400 px-5 py-6 text-black">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
-              Main energy
+              Main trait
             </p>
 
             <h2 className="mt-4 text-4xl font-black leading-none tracking-tight">
@@ -83,33 +73,33 @@ export default async function RevealPage({ params }: PageProps) {
             </h2>
 
             <p className="mt-5 text-sm font-bold leading-6 text-black/70">
-              This is the trait your friends noticed the most.
+              This is the trait friends picked the most.
             </p>
 
             <p className="mt-4 text-sm font-black text-black">
-              {topTrait.count} friend
-              {topTrait.count !== 1 ? 's' : ''} picked this.
+              Picked {topTrait.count} time
+              {topTrait.count !== 1 ? 's' : ''}
             </p>
           </div>
         ) : null}
 
         {secondaryTraits.length > 0 ? (
-          <div className="mt-5 rounded-2xl border border-white/10 bg-white/4 p-5">
+          <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-5">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">
-              Also showed up
+              Also noticed
             </p>
 
             <div className="mt-4 space-y-3">
               {secondaryTraits.map((trait) => (
                 <div
                   key={trait.id}
-                  className="flex items-center justify-between gap-4 rounded-2xl bg-white/5 px-4 py-3"
+                  className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3"
                 >
-                  <p className="text-sm font-black text-white">
+                  <p className="text-sm font-black">
                     {trait.label}
                   </p>
 
-                  <p className="shrink-0 text-xs font-bold text-lime-400">
+                  <p className="text-xs font-bold text-lime-400">
                     {trait.count}
                   </p>
                 </div>
@@ -118,21 +108,18 @@ export default async function RevealPage({ params }: PageProps) {
           </div>
         ) : null}
 
-        <div className="mt-5 rounded-2xl border border-white/10 bg-white/4 p-5">
-          <p className="text-sm font-bold leading-6 text-white/60">
-            Your friends did not answer a personality test. They picked the
-            traits they actually felt from you.
-          </p>
-        </div>
+        <Link
+          href={`/mirror/${slug}`}
+          className="mt-6 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
+        >
+          Pick Their Trait
+        </Link>
 
         <Link
-          href={`https://wa.me/?text=${encodeURIComponent(
-            `My friends see me as:\n\n${topTrait?.label}\n\nWhat's your trait?\n\n${appUrl}/result/${slug}`,
-          )}`}
-          target="_blank"
-          className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
+          href="/create"
+          className="mt-3 block w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center text-sm font-black text-white"
         >
-          Share My Result
+          Find Your Trait
         </Link>
       </section>
     </main>
