@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type Props = {
   slug: string
@@ -9,9 +10,21 @@ type Props = {
 }
 
 export default function ShareActions({ slug, question, traitCount }: Props) {
+  const router = useRouter()
+
   const [origin, setOrigin] = useState('')
   const [copied, setCopied] = useState(false)
   const [notice, setNotice] = useState('')
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      router.refresh()
+    }, 5000)
+
+    return () => {
+      window.clearInterval(intervalId)
+    }
+  }, [router])
 
   useEffect(() => {
     setOrigin(window.location.origin)

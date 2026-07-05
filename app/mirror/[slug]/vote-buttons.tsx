@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 type Trait = {
@@ -28,6 +29,8 @@ function getVoterKey() {
 }
 
 export default function VoteButtons({ mirrorId, traits }: Props) {
+  const router = useRouter()
+
   const [selectedTraitId, setSelectedTraitId] = useState<string | null>(null)
   const [loadingTraitId, setLoadingTraitId] = useState<string | null>(null)
   const [message, setMessage] = useState('')
@@ -61,6 +64,7 @@ export default function VoteButtons({ mirrorId, traits }: Props) {
     setSelectedTraitId(traitId)
     setMessage('Trait submitted anonymously.')
     setLoadingTraitId(null)
+    router.refresh()
   }
 
   return (

@@ -14,19 +14,6 @@ type TraitCount = {
   count: number
 }
 
-function getTraitMeaning(label: string) {
-  const meanings: Record<string, string> = {
-    'Group glue': 'The person holding the group together.',
-    'Therapist friend': 'The person everyone trusts with their real feelings.',
-    'Loyal backup': 'The one who quietly shows up when it matters.',
-    'Silent supporter': 'The calm presence people feel safe around.',
-    'Energy lifter': 'The one who changes the mood when they enter.',
-    'Safe place': 'The person people feel comfortable being real with.',
-  }
-
-  return meanings[label] || 'The trait your friends strongly feel from you.'
-}
-
 export default async function ResultPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
@@ -62,46 +49,60 @@ export default async function ResultPage({ params }: PageProps) {
     .sort((a, b) => b.count - a.count)
 
   const topTrait = rankedTraits[0]
+  const hiddenTraitCount = Math.max(rankedTraits.length - 1, 0)
+  const totalPicks = votes?.length || 0
 
   return (
-    <main className="min-h-screen bg-black px-5 py-8 text-white">
-      <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 py-8 shadow-[0_0_80px_rgba(163,230,53,0.12)]">
-          <p className="text-center text-xs font-black uppercase tracking-[0.28em] text-lime-400">
-            Your friends see you as
-          </p>
+    <main className="min-h-screen bg-[#1c1c1a] px-5 py-8 text-white">
+      <section className="mx-auto flex min-h-[85vh] w-full max-w-md items-center justify-center">
+        <div className="relative flex min-h-[680px] w-full flex-col rounded-[2.5rem] bg-[#07070d] px-7 py-8 shadow-[0_0_70px_rgba(163,230,53,0.14)]">
+          <div>
+            <p className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
+              <span className="h-3 w-3 rounded-full bg-lime-400" />
+              Mirror
+            </p>
 
-          <h1 className="mt-8 text-center text-6xl font-black uppercase leading-[0.9] tracking-tight text-lime-400">
-            {topTrait?.label || 'Unknown Trait'}
-          </h1>
+            <p className="mt-3 font-mono text-base lowercase tracking-wide text-white/50">
+              someone&apos;s mirror
+            </p>
+          </div>
 
-          <p className="mt-6 text-center text-lg font-bold leading-7 text-white/85">
-            {topTrait
-              ? getTraitMeaning(topTrait.label)
-              : 'Your trait will appear after friends pick it.'}
-          </p>
+          <div className="mt-40">
+            <p className="font-mono text-sm uppercase tracking-[0.24em] text-white/50">
+              Friends picked
+            </p>
 
-          <div className="my-8 border-t border-dashed border-lime-400/40" />
+            <h1 className="mt-4 text-6xl font-light leading-none tracking-[-0.08em] text-lime-400">
+              {topTrait?.label || 'Hidden trait'}
+            </h1>
 
-          <p className="text-center text-xl font-black leading-8 text-white">
-            {topTrait?.count || 0} friend
-            {topTrait?.count !== 1 ? 's' : ''}{' '}
-            <span className="text-lime-400">independently</span> picked this
-            trait.
-          </p>
+            <p className="mt-6 font-mono text-base leading-7 text-white/55">
+              picked by {totalPicks} anonymous friend
+              {totalPicks !== 1 ? 's' : ''}
+            </p>
 
-          <div className="my-8 border-t border-dashed border-lime-400/40" />
+            <div className="mt-8 rounded-3xl border border-white/15 px-6 py-5">
+              <p className="font-mono text-sm uppercase tracking-[0.22em] text-white/45">
+                +{hiddenTraitCount} more trait
+                {hiddenTraitCount !== 1 ? 's' : ''}
+              </p>
 
-          <p className="text-center text-2xl font-black leading-9 tracking-tight text-white">
-            What trait would your friends pick for you?
-          </p>
+              <div className="mt-5 h-5 rounded-full bg-white/10 blur-sm" />
+            </div>
+          </div>
 
-          <Link
-            href="/create"
-            className="mt-8 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-base font-black text-black"
-          >
-            Find Your Trait
-          </Link>
+          <div className="mt-auto">
+            <Link
+              href="/create"
+              className="block w-full rounded-full bg-lime-400 px-6 py-5 text-center text-lg font-medium text-black"
+            >
+              unlock your mirror
+            </Link>
+
+            <p className="mt-5 text-center font-mono text-sm tracking-wider text-white/35">
+              traits-app-gold.vercel.app
+            </p>
+          </div>
         </div>
       </section>
     </main>
