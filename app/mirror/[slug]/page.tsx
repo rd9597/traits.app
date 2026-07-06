@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ShareActions from './share-actions'
 import VoteButtons from './vote-buttons'
-
+import ReportMirrorButton from './report-mirror-button'
 type PageProps = {
   params: Promise<{
     slug: string
@@ -197,13 +197,21 @@ export default async function MirrorPage({ params }: PageProps) {
             </a>
           </div>
         ) : (
-          <VoteButtons
-            mirrorId={mirror.id}
-            traits={mirrorTraits.map((trait) => ({
-              id: trait.id,
-              label: trait.label,
+          <>
+            <VoteButtons
+              mirrorId={mirror.id}
+              traits={mirrorTraits.map((trait) => ({
+                id: trait.id,
+                label: trait.label,
+            
             }))}
           />
+
+          <ReportMirrorButton
+            mirrorId={mirror.id}
+            mirrorSlug={slug}
+          />
+       </>
         )}
       </section>
     </main>
