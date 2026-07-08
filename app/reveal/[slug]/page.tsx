@@ -14,6 +14,43 @@ type TraitCount = {
   count: number
 }
 
+function getSocialPattern(label: string | undefined) {
+  const normalizedLabel = String(label || '').toLowerCase()
+
+  if (normalizedLabel.includes('soft')) {
+    return {
+      title: 'People think you feel more than you show.',
+      body: 'Friends may sense that you care deeply, but you do not reveal that side easily. That makes people feel there is a softer version of you they only see when they get close.',
+    }
+  }
+
+  if (normalizedLabel.includes('guarded')) {
+    return {
+      title: 'People feel they have to earn your trust.',
+      body: 'You do not open up instantly, so friends may see you as emotionally reserved — not cold, just hard to fully read at first.',
+    }
+  }
+
+  if (normalizedLabel.includes('leader')) {
+    return {
+      title: 'People quietly look to you for direction.',
+      body: 'Even when you are not trying to lead, your reaction affects the room more than you may realize.',
+    }
+  }
+
+  if (normalizedLabel.includes('loyal')) {
+    return {
+      title: 'People see you as someone who stays.',
+      body: 'Friends may feel that once you care, you become a steady presence they can rely on.',
+    }
+  }
+
+  return {
+    title: 'People noticed a side of you that is not obvious.',
+    body: 'The strongest pattern was not just a trait. It was the way friends experience your presence when they are around you.',
+  }
+}
+
 export default async function RevealPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
@@ -32,15 +69,11 @@ export default async function RevealPage({ params }: PageProps) {
     notFound()
   }
 
-  const { error: revealAnalyticsError } = await supabase
-  .from('analytics_events')
-  .insert({
+  await supabase.from('analytics_events').insert({
     event_type: 'reveal_opened',
     mirror_slug: slug,
     metadata: {},
   })
-
-console.log('reveal_opened error:', revealAnalyticsError)
 
   const { data: traits } = await supabase
     .from('mirror_traits')
@@ -66,6 +99,7 @@ console.log('reveal_opened error:', revealAnalyticsError)
   const totalTraits = votes?.length || 0
   const topTrait = rankedTraits[0]
   const secondaryTraits = rankedTraits.slice(1)
+  const socialPattern = getSocialPattern(topTrait?.label)
 
   return (
     <main className="min-h-screen bg-black px-5 py-8 text-white">
@@ -88,12 +122,12 @@ console.log('reveal_opened error:', revealAnalyticsError)
               Main energy
             </p>
 
-            <h2 className="mt-4 text-4xl font-black leading-none tracking-tight">
-              {topTrait.label}
+            <h2 className="mt-4 text-3xl font-black leading-tight tracking-tight">
+              {socialPattern.title}
             </h2>
 
             <p className="mt-5 text-sm font-bold leading-6 text-black/70">
-              This is the trait your friends noticed the most.
+              {socialPattern.body}
             </p>
 
             <p className="mt-4 text-sm font-black text-black">

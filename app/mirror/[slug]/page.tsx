@@ -128,13 +128,25 @@ export default async function MirrorPage({ params }: PageProps) {
 
             {unlocked && !isExpired ? (
               <a
-                href={`/reveal/${slug}`}
+                href={`/result/${slug}`}
                 className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-              >
+       >
                 Reveal My Traits
-              </a>
-            ) : null}
-          </div>
+            </a>
+        ) : null}
+
+        {!isExpired ? (
+  <div className="mt-5 rounded-2xl border border-lime-400/15 bg-lime-400/5 px-5 py-4">
+    <p className="text-xs font-bold uppercase tracking-[0.18em] text-lime-400">
+      Premium preview
+    </p>
+
+    <p className="mt-2 text-sm leading-6 text-white/55">
+      After your basic reveal, unlock deeper insights from ₹19.
+    </p>
+  </div>
+) : null}
+        </div>
 
           <ShareActions
             slug={slug}
