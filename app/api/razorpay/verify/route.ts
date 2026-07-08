@@ -15,7 +15,7 @@ type VerifyRequestBody = {
 
 const unlockAmounts: Record<UnlockTier, number> = {
   pattern: 1900,
-  full: 9900,
+  full: 4900,
 }
 
 function isValidUnlockTier(value: unknown): value is UnlockTier {

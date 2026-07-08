@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ResultCtaButton from './result-cta-button'
 
@@ -53,166 +53,6 @@ function getSocialPattern(label: string | undefined) {
   }
 }
 
-function getIdentityMap(
-  primaryLabel: string | undefined,
-  secondaryLabel: string | undefined
-) {
-  const primary = String(primaryLabel || '').toLowerCase()
-  const secondary = secondaryLabel || 'a side most people miss'
-
-  if (primary.includes('soft')) {
-    return [
-      {
-        title: 'How strangers usually see you',
-        body: 'They may think you are calm or emotionally controlled at first.',
-      },
-      {
-        title: 'How close friends experience you',
-        body: 'People who get closer notice you feel things much deeper than you show.',
-      },
-      {
-        title: 'What people misunderstand about you',
-        body: 'Some may assume you are unaffected, when you are actually just private with your emotions.',
-      },
-      {
-        title: 'Your hidden social advantage',
-        body: 'You make people feel emotionally safe because your softness is quiet, not performative.',
-      },
-      {
-        title: 'The effect you leave after you leave',
-        body: 'People remember the gentle side of you more than you realize.',
-      },
-    ]
-  }
-
-  if (primary.includes('leader')) {
-    return [
-      {
-        title: 'How strangers usually see you',
-        body: 'They may notice that you carry yourself with quiet authority.',
-      },
-      {
-        title: 'How close friends experience you',
-        body: `People close to you also notice ${secondary}, which makes your leadership feel more personal.`,
-      },
-      {
-        title: 'What people misunderstand about you',
-        body: 'Some people may think you want control, when you actually just notice what needs to be done.',
-      },
-      {
-        title: 'Your hidden social advantage',
-        body: 'People naturally look at your reaction before deciding how serious something is.',
-      },
-      {
-        title: 'The effect you leave after you leave',
-        body: 'Your opinion often stays in the room even after you are gone.',
-      },
-    ]
-  }
-
-  if (primary.includes('loyal')) {
-    return [
-      {
-        title: 'How strangers usually see you',
-        body: 'They may not immediately realize how deeply you attach to people you care about.',
-      },
-      {
-        title: 'How close friends experience you',
-        body: 'Close friends experience you as someone who stays steady when others become inconsistent.',
-      },
-      {
-        title: 'What people misunderstand about you',
-        body: 'Some may mistake your patience for weakness, when it is actually emotional commitment.',
-      },
-      {
-        title: 'Your hidden social advantage',
-        body: 'You make people feel chosen, and that creates strong emotional loyalty back toward you.',
-      },
-      {
-        title: 'The effect you leave after you leave',
-        body: 'People remember that you were there when it mattered.',
-      },
-    ]
-  }
-
-  if (primary.includes('guarded')) {
-    return [
-      {
-        title: 'How strangers usually see you',
-        body: 'They may feel there is more to you than what you show upfront.',
-      },
-      {
-        title: 'How close friends experience you',
-        body: 'People close to you know your trust is slow, but once given, it feels real.',
-      },
-      {
-        title: 'What people misunderstand about you',
-        body: 'Some may read your distance as coldness, when it is actually caution.',
-      },
-      {
-        title: 'Your hidden social advantage',
-        body: 'You make access to your inner world feel rare, which makes people value it more.',
-      },
-      {
-        title: 'The effect you leave after you leave',
-        body: 'People often think about what you did not say as much as what you did say.',
-      },
-    ]
-  }
-
-  return [
-    {
-      title: 'How strangers usually see you',
-      body: 'They first notice your strongest social signal, but may not immediately understand the full meaning behind it.',
-    },
-    {
-      title: 'How close friends experience you',
-      body: `People who get closer usually notice ${secondary}. This is the version casual people may miss.`,
-    },
-    {
-      title: 'What people misunderstand about you',
-      body: 'Some people may read your silence or reactions too quickly before they understand your actual intent.',
-    },
-    {
-      title: 'Your hidden social advantage',
-      body: 'You leave people with a stronger impression than you probably realize, even when you are not trying to stand out.',
-    },
-    {
-      title: 'The effect you leave after you leave',
-      body: 'People may replay small moments with you later because your presence creates a clearer emotional memory than expected.',
-    },
-  ]
-}
-function getMixedIdentityMap(
-  firstLabel: string | undefined,
-  secondLabel: string | undefined
-) {
-  const first = firstLabel || 'your first side'
-  const second = secondLabel || 'your second side'
-
-  return [
-    {
-      title: 'How strangers usually see you',
-      body: `People are almost evenly split between seeing you as "${first}" and "${second}".`,
-    },
-    {
-      title: 'How close friends experience you',
-      body: 'The people who know you best usually notice both sides depending on the situation, which makes your personality feel more layered than predictable.',
-    },
-    {
-      title: 'What people misunderstand about you',
-      body: 'Some people confidently believe they understand you, while others experience a completely different version of you.',
-    },
-    {
-      title: 'Your hidden social advantage',
-      body: 'Your ability to naturally show different strengths in different situations makes you difficult to stereotype.',
-    },
-    {
-      title: 'The effect you leave after you leave',
-      body: 'People often compare notes about you because their experiences are surprisingly different.',
-    },
-  ]
-}
 export default async function ResultPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
@@ -248,6 +88,17 @@ export default async function ResultPage({ params }: PageProps) {
     .select('unlock_tier')
     .eq('mirror_id', mirror.id)
 
+  const unlockedTiers = new Set(
+    (unlocks || []).map((unlock) => unlock.unlock_tier),
+  )
+
+  const hasPatternUnlock = unlockedTiers.has('pattern')
+  const hasFullUnlock = unlockedTiers.has('full')
+
+  if (hasFullUnlock) {
+    redirect(`/result/${slug}/analytics`)
+  }
+
   const rankedTraits: TraitCount[] = (traits || [])
     .map((trait) => ({
       id: trait.id,
@@ -259,89 +110,32 @@ export default async function ResultPage({ params }: PageProps) {
     .sort((a, b) => b.count - a.count)
 
   const topTrait = rankedTraits[0]
-const secondTrait = rankedTraits[1]
+  const secondTrait = rankedTraits[1]
+  const totalPicks = votes?.length || 0
 
-const totalPicks = votes?.length || 0
+  const hasTie =
+    !!topTrait &&
+    !!secondTrait &&
+    topTrait.count === secondTrait.count
 
-const hasTie =
-  !!topTrait &&
-  !!secondTrait &&
-  topTrait.count === secondTrait.count
-
-const socialPattern = getSocialPattern(topTrait?.label)
-
-const identityMap = hasTie
-  ? getMixedIdentityMap(
-      topTrait?.label,
-      secondTrait?.label
-    )
-  : getIdentityMap(
-      topTrait?.label,
-      secondTrait?.label
-    )
-
-  const unlockedTiers = new Set(
-    (unlocks || []).map((unlock) => unlock.unlock_tier)
-  )
-
-  const hasPatternUnlock = unlockedTiers.has('pattern')
-  const hasFullUnlock = unlockedTiers.has('full')
+  const socialPattern = getSocialPattern(topTrait?.label)
 
   return (
-  <main className="min-h-screen bg-[#1c1c1a] px-5 py-8 text-white">
-    <section className="mx-auto flex min-h-[85vh] w-full max-w-md items-center justify-center">
-      <div className="relative flex min-h-170 w-full flex-col rounded-[2.5rem] bg-[#07070d] px-7 py-8 shadow-[0_0_70px_rgba(163,230,53,0.14)]">
-        <div>
-          <p className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
-            <span className="h-3 w-3 rounded-full bg-lime-400" />
-            Mirror
-          </p>
+    <main className="min-h-screen bg-[#1c1c1a] px-5 py-8 text-white">
+      <section className="mx-auto flex min-h-[85vh] w-full max-w-md items-center justify-center">
+        <div className="relative flex min-h-170 w-full flex-col rounded-[2.5rem] bg-[#07070d] px-7 py-8 shadow-[0_0_70px_rgba(163,230,53,0.14)]">
+          <div>
+            <p className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
+              <span className="h-3 w-3 rounded-full bg-lime-400" />
+              Mirror
+            </p>
 
-          <p className="mt-3 font-mono text-base lowercase tracking-wide text-white/50">
-            someone&apos;s mirror
-          </p>
-        </div>
+            <p className="mt-3 font-mono text-base lowercase tracking-wide text-white/50">
+              someone&apos;s mirror
+            </p>
+          </div>
 
-        <div className="mt-24">
-          {hasFullUnlock ? (
-            <div className="rounded-3xl border border-lime-400/25 bg-white/5 px-6 py-6">
-              <p className="font-mono text-xs uppercase tracking-[0.28em] text-lime-400/70">
-                Complete perception
-              </p>
-
-              <h1 className="mt-3 text-4xl font-black leading-[0.95] tracking-[-0.06em] text-white">
-                Identity Map
-              </h1>
-
-              <p className="mt-4 text-sm leading-6 text-white/55">
-                Everything your friends consistently reveal about how they
-                experience you.
-              </p>
-
-              <div className="mt-8 space-y-4">
-                {identityMap.map((item, index) => (
-                  <div
-                    key={item.title}
-                    className="rounded-3xl bg-white/5 px-5 py-5"
-                  >
-                    <p className="font-mono text-xs text-lime-400">
-                      0{index + 1}
-                    </p>
-
-                    <h2 className="mt-3 text-base font-semibold leading-6 text-white">
-                      {item.title}
-                    </h2>
-
-                    <p className="mt-3 text-sm leading-6 text-white/55">
-                      {item.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          <div className={hasFullUnlock ? 'mt-8' : ''}>
+          <div className="mt-24">
             {hasPatternUnlock ? (
               <>
                 <p className="font-mono text-sm uppercase tracking-[0.24em] text-lime-400">
@@ -362,8 +156,7 @@ const identityMap = hasTie
                       <p className="mt-5 text-sm font-bold leading-6 text-black/70">
                         Two different perceptions appeared almost equally often.
                         Right now, people don&apos;t see you in one consistent
-                        way. A few more responses will reveal which perception
-                        becomes your dominant social identity.
+                        way.
                       </p>
                     </>
                   ) : (
@@ -384,18 +177,23 @@ const identityMap = hasTie
                     Confidence
                   </p>
 
-                  {hasTie ? (
-                    <p className="mt-2 font-mono text-sm leading-6 text-white/60">
-                      {topTrait?.count || 0} friends matched one perception and{' '}
-                      {secondTrait?.count || 0} matched another. The result is
-                      currently too close to identify a dominant social pattern.
-                    </p>
-                  ) : (
-                    <p className="mt-2 font-mono text-sm leading-6 text-white/60">
-                      {topTrait?.count || 0} of {totalPicks} friends formed this
-                      pattern.
-                    </p>
-                  )}
+                  <p className="mt-2 font-mono text-sm leading-6 text-white/60">
+                    {topTrait?.count || 0} of {totalPicks} friends formed this
+                    pattern.
+                  </p>
+                </div>
+
+                <div className="mt-8 rounded-3xl border border-white/15 px-6 py-5">
+                  <p className="font-mono text-sm uppercase tracking-[0.22em] text-white/45">
+                    Complete identity analytics locked
+                  </p>
+
+                  <div className="mt-5 h-5 rounded-full bg-white/10 blur-sm" />
+
+                  <p className="mt-4 font-mono text-xs leading-5 text-white/35">
+                    Unlock the full identity report, rank, signal strength, and
+                    response breakdown.
+                  </p>
                 </div>
               </>
             ) : (
@@ -404,49 +202,15 @@ const identityMap = hasTie
                   3 friends responded
                 </p>
 
-                {hasTie ? (
-                  <>
-                    <p className="mt-4 text-5xl font-light leading-[0.95] tracking-[-0.08em] text-lime-400">
-                      People see two different sides of you.
-                    </p>
+                <p className="mt-4 text-5xl font-light leading-[0.95] tracking-[-0.08em] text-lime-400">
+                  They formed one clear pattern about you.
+                </p>
 
-                    <p className="mt-6 font-mono text-base leading-7 text-white/55">
-                      Your friends are almost evenly split between two different
-                      perceptions. A few more responses will reveal which one
-                      becomes your dominant social identity.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="mt-4 text-5xl font-light leading-[0.95] tracking-[-0.08em] text-lime-400">
-                      They formed one clear pattern about you.
-                    </p>
+                <p className="mt-6 font-mono text-base leading-7 text-white/55">
+                  Your result is ready, but the main signal is hidden.
+                </p>
 
-                    <p className="mt-6 font-mono text-base leading-7 text-white/55">
-                      Your result is ready, but the main signal is hidden.
-                    </p>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-
-          {!hasFullUnlock ? (
-            <div className="mt-8 rounded-3xl border border-white/15 px-6 py-5">
-              {hasPatternUnlock ? (
-                <div>
-                  <p className="font-mono text-sm uppercase tracking-[0.22em] text-white/45">
-                    Different version detected
-                  </p>
-
-                  <div className="mt-5 h-5 rounded-full bg-white/10 blur-sm" />
-
-                  <p className="mt-4 font-mono text-xs leading-5 text-white/35">
-                    Some friends saw a completely different version of you.
-                  </p>
-                </div>
-              ) : (
-                <div>
+                <div className="mt-8 rounded-3xl border border-white/15 px-6 py-5">
                   <p className="font-mono text-sm uppercase tracking-[0.22em] text-white/45">
                     Main signal locked
                   </p>
@@ -458,24 +222,23 @@ const identityMap = hasTie
                     Unlock to see the social pattern your friends created.
                   </p>
                 </div>
-              )}
-            </div>
-          ) : null}
-        </div>
+              </>
+            )}
+          </div>
 
-        <div className="mt-auto">
-          <ResultCtaButton
-            slug={slug}
-            hasPatternUnlock={hasPatternUnlock}
-            hasFullUnlock={hasFullUnlock}
-          />
+          <div className="mt-auto">
+            <ResultCtaButton
+              slug={slug}
+              hasPatternUnlock={hasPatternUnlock}
+              hasFullUnlock={false}
+            />
 
-          <p className="mt-5 text-center font-mono text-sm tracking-wider text-white/35">
-            traits-app-gold.vercel.app
-          </p>
+            <p className="mt-5 text-center font-mono text-sm tracking-wider text-white/35">
+              traits-app-gold.vercel.app
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
-   )
+      </section>
+    </main>
+  )
 }

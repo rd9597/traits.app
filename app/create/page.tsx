@@ -1,8 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
+import { useEffect, useMemo, useState } from 'react'            
 type MirrorTone = 'plus' | 'minus'
 
 type MirrorCategory = {
@@ -146,12 +145,21 @@ export default function CreatePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showCategories, setShowCategories] = useState(false)
+  const [activeMirrorSlug, setActiveMirrorSlug] = useState('')
 
   const visibleQuestions = useMemo(() => {
     if (!selectedCategory) return []
     shuffleKey
     return getShuffledQuestions(selectedCategory, selectedTone)
   }, [selectedCategory, selectedTone, shuffleKey])
+
+  useEffect(() => {
+  const savedSlug = localStorage.getItem('traits_active_mirror')
+
+  if (savedSlug) {
+    setActiveMirrorSlug(savedSlug)
+  }
+}, [])
 
   function handleCategoryChange(categoryId: string) {
     setSelectedCategory(categoryId)
@@ -217,6 +225,10 @@ export default function CreatePage() {
       throw new Error(data.error || 'Failed to create mirror.')
     }
 
+    localStorage.setItem('traits_active_mirror', data.slug)
+
+    router.push(`/mirror/${data.slug}`)
+
     router.push(`/mirror/${data.slug}`)
   } catch (error) {
     setError(
@@ -232,9 +244,10 @@ export default function CreatePage() {
   return (
     <main className="min-h-screen bg-black px-6 py-8 text-white">
       <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
-        <p className="text-xs font-bold uppercase tracking-[0.28em] text-lime-400">
-          Create Mirror
-        </p>
+
+  <p className="text-xs font-bold uppercase tracking-[0.28em] text-lime-400">
+    Create Mirror
+  </p>
 
         <h1 className="mt-4 text-4xl font-black leading-tight">
           What do you want your friends to reveal?

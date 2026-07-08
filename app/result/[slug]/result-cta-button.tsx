@@ -156,7 +156,7 @@ export default function ResultCtaButton({
       onClick={handleUnlock}
       className="block w-full rounded-full bg-lime-400 px-6 py-5 text-center text-lg font-medium text-black"
     >
-      {hasPatternUnlock ? 'Complete My Identity Map · ₹99' : 'Show Me · ₹19'}
+      {hasPatternUnlock ? 'Complete My Identity Map · ₹49' : 'Show Me · ₹19'}
     </button>
   )
 }

@@ -169,6 +169,13 @@ export default async function RevealPage({ params }: PageProps) {
           </p>
         </div>
 
+        <a
+          href={`/result/${slug}`}
+          className="mt-6 block w-full rounded-2xl border border-lime-400 bg-transparent px-5 py-4 text-center text-sm font-black text-lime-400"
+        >
+          Continue to Premium Insights →
+        </a>
+
         <ShareResultButton
           slug={slug}
           appUrl={appUrl}

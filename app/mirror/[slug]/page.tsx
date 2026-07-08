@@ -128,7 +128,7 @@ export default async function MirrorPage({ params }: PageProps) {
 
             {unlocked && !isExpired ? (
               <a
-                href={`/result/${slug}`}
+                href={`/reveal/${slug}`}
                 className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
        >
                 Reveal My Traits
