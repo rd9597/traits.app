@@ -169,32 +169,45 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-3 gap-3">
-            <div className="rounded-3xl bg-white/6 px-4 py-5 text-center">
-              <p className="text-3xl font-black">{confidence}%</p>
-              <p className="mt-1 text-sm leading-5 text-white/45">
-                majority signal
-              </p>
-            </div>
+          <div className="mt-10">
+            <p className="font-mono text-xs uppercase tracking-[0.28em] text-white/35">
+              Social Status
+            </p>
 
-            <div className="rounded-3xl bg-white/6 px-4 py-5 text-center">
-              <p className="text-3xl font-black">#{indiaRank}</p>
-              <p className="mt-1 text-sm leading-5 text-white/45">
-                rank india
-              </p>
-            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="rounded-3xl bg-white/6 px-4 py-5">
+                <p className="text-3xl font-black">#{indiaRank}</p>
+                <p className="mt-1 text-sm leading-5 text-white/45">
+                  Identity Rank
+                </p>
+              </div>
 
-            <div className="rounded-3xl bg-white/6 px-4 py-5 text-center">
-              <p className="text-3xl font-black">top {topPercent}%</p>
-              <p className="mt-1 text-sm leading-5 text-white/45">
-                social pull
-              </p>
+              <div className="rounded-3xl bg-white/6 px-4 py-5">
+                <p className="text-3xl font-black">Top {topPercent}%</p>
+                <p className="mt-1 text-sm leading-5 text-white/45">
+                  Social Status
+                </p>
+              </div>
+
+              <div className="rounded-3xl bg-white/6 px-4 py-5">
+                <p className="text-3xl font-black">{confidence}%</p>
+                <p className="mt-1 text-sm leading-5 text-white/45">
+                  Signal Strength
+                </p>
+              </div>
+
+              <div className="rounded-3xl bg-white/6 px-4 py-5">
+                <p className="text-3xl font-black">{totalVotes}</p>
+                <p className="mt-1 text-sm leading-5 text-white/45">
+                  Real Responses
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="mt-9 border-t border-white/10 pt-7">
             <p className="text-sm uppercase tracking-[0.24em] text-lime-400">
-              social status
+              Social Identity
             </p>
 
             <h2 className="mt-4 text-3xl font-black leading-tight tracking-[-0.06em]">
