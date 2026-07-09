@@ -245,8 +245,8 @@ export default function ShareCardClient({
           >
             Share
           </button>
-        </div>
-      </section>
+                  </div>
+        </section>
     </main>
   )
 }

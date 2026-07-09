@@ -415,6 +415,13 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
               identitymirror.vercel.app
             </p>
           </div>
+
+          <Link
+            href={`/result/${slug}/share`}
+            className="mt-8 flex w-full items-center justify-center rounded-3xl bg-lime-400 px-6 py-5 text-lg font-black text-black transition hover:brightness-110"
+          >
+            Create Share Card →
+          </Link>
         </section>
       </section>
     </main>
