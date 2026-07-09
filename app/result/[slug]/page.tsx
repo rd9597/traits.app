@@ -183,17 +183,48 @@ export default async function ResultPage({ params }: PageProps) {
                   </p>
                 </div>
 
-                <div className="mt-8 rounded-3xl border border-white/15 px-6 py-5">
-                  <p className="font-mono text-sm uppercase tracking-[0.22em] text-white/45">
-                    Complete identity analytics locked
+                <div className="mt-8 rounded-3xl border border-white/15 bg-white/3 px-6 py-5">
+                  <p className="font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
+                    Complete identity report locked
                   </p>
 
-                  <div className="mt-5 h-5 rounded-full bg-white/10 blur-sm" />
-
-                  <p className="mt-4 font-mono text-xs leading-5 text-white/35">
-                    Unlock the full identity report, rank, signal strength, and
-                    response breakdown.
+                  <p className="mt-4 text-2xl font-black leading-tight tracking-tight text-white">
+                    There is more your friends revealed.
                   </p>
+
+                  <div className="mt-5 space-y-3">
+                    <div className="rounded-2xl bg-white/7 px-4 py-3">
+                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/35">
+                        Unlocked
+                      </p>
+                      <p className="mt-1 text-sm font-black text-white">
+                        Your strongest social signal: {topTrait?.label || 'Hidden'}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-white/5 px-4 py-3">
+                      <p className="text-sm font-bold text-white/45">
+                       🔒 Why people keep seeing this side of you
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-white/5 px-4 py-3">
+                      <p className="text-sm font-bold text-white/45">
+                       🔒 The contradiction in how friends read you
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/5 px-4 py-3">
+                    <p className="text-sm font-bold text-white/45">
+                     🔒 Your first-impression vs real-impression gap
+                    </p>
+                  </div>
+                 </div>
+
+                    <p className="mt-5 font-mono text-xs leading-5 text-white/35">
+                      Unlock the complete report to see the deeper identity read behind this
+                      pattern.
+                    </p>
                 </div>
               </>
             ) : (

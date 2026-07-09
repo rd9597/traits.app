@@ -112,7 +112,7 @@ export default function ResultCtaButton({
       description:
         unlockTier === 'pattern'
           ? 'Unlock Social Pattern'
-          : 'Unlock Identity Map',
+          : 'Unlock Complete Identity Report',
       order_id: order.orderId,
       handler: async (paymentResponse) => {
         const verifyResponse = await fetch('/api/razorpay/verify', {
@@ -156,7 +156,9 @@ export default function ResultCtaButton({
       onClick={handleUnlock}
       className="block w-full rounded-full bg-lime-400 px-6 py-5 text-center text-lg font-medium text-black"
     >
-      {hasPatternUnlock ? 'Complete My Identity Map · ₹49' : 'Show Me · ₹19'}
+      {hasPatternUnlock
+        ? 'Unlock My Complete Report · ₹49'
+        : 'Reveal My Social Pattern · ₹19'}
     </button>
   )
 }

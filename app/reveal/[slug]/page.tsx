@@ -169,12 +169,50 @@ export default async function RevealPage({ params }: PageProps) {
           </p>
         </div>
 
-        <a
-          href={`/result/${slug}`}
-          className="mt-6 block w-full rounded-2xl border border-lime-400 bg-transparent px-5 py-4 text-center text-sm font-black text-lime-400"
-        >
-          Continue to Premium Insights →
+        <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-5">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-400">
+            Complete Identity Report
+          </p>
+
+          <h3 className="mt-3 text-2xl font-black leading-tight tracking-tight text-white">
+            See the full version your friends unlocked about you.
+          </h3>
+
+          <p className="mt-3 text-sm font-bold leading-6 text-white/55">
+            Get the deeper read: why people see you this way, what it says about your
+            social image, and the part they may not say directly.
+          </p>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="rounded-2xl bg-white/5 p-3 text-center">
+              <p className="text-lg font-black text-white">3</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                Signals
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-white/5 p-3 text-center">
+              <p className="text-lg font-black text-white">₹49</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                Unlock
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-white/5 p-3 text-center">
+              <p className="text-lg font-black text-white">1</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+                Report
+              </p>
+            </div>
+          </div>
+
+          <a
+            href={`/result/${slug}`}
+            className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
+         >
+            Unlock Complete Report →
         </a>
+      </div>
 
         <ShareResultButton
           slug={slug}
