@@ -120,153 +120,159 @@ export default async function ResultPage({ params }: PageProps) {
 
   const socialPattern = getSocialPattern(topTrait?.label)
 
-  return (
-    <main className="min-h-screen bg-[#1c1c1a] px-5 py-8 text-white">
+        return (
+    <main className="min-h-screen bg-[#191917] px-5 py-8 text-foreground">
       <section className="mx-auto flex min-h-[85vh] w-full max-w-md items-center justify-center">
-        <div className="relative flex min-h-170 w-full flex-col rounded-[2.5rem] bg-[#07070d] px-7 py-8 shadow-[0_0_70px_rgba(163,230,53,0.14)]">
-          <div>
-            <p className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
-              <span className="h-3 w-3 rounded-full bg-lime-400" />
-              Mirror
-            </p>
+        <div className="relative flex min-h-[680px] w-full max-w-[390px] flex-col overflow-hidden rounded-[32px] border border-white/[0.08] bg-[#09090D] px-6 py-7 shadow-[0_0_70px_rgba(255,90,95,0.10)]">
+          <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-accent/10 blur-[80px]" />
 
-            <p className="mt-3 font-mono text-base lowercase tracking-wide text-white/50">
-              someone&apos;s mirror
+          <div className="relative">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-accent" />
+
+              <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-accent">
+                Identity Mirror
+              </p>
+            </div>
+
+            <p className="mt-2 text-[10px] tracking-wide text-foreground-muted">
+              Anonymous social feedback
             </p>
           </div>
 
-          <div className="mt-24">
+          <div className="relative mt-14">
             {hasPatternUnlock ? (
               <>
-                <p className="font-mono text-sm uppercase tracking-[0.24em] text-lime-400">
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-accent">
                   Social pattern
                 </p>
 
-                <div className="mt-5 rounded-4xl border border-lime-400/30 bg-lime-400 px-6 py-6 text-black">
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-black/45">
-                    What your friends consistently felt
-                  </p>
+                <section className="relative mt-4 overflow-hidden rounded-[22px] border border-accent/20 bg-accent px-5 py-5 text-accent-foreground">
+                  <div className="pointer-events-none absolute -right-14 -top-16 h-40 w-40 rounded-full bg-white/15 blur-[70px]" />
 
-                  {hasTie ? (
-                    <>
-                      <h1 className="mt-4 text-3xl font-black leading-tight tracking-tighter">
-                        Your social identity is still forming.
-                      </h1>
+                  <div className="relative">
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-black/50">
+                      What people consistently felt
+                    </p>
 
-                      <p className="mt-5 text-sm font-bold leading-6 text-black/70">
-                        Two different perceptions appeared almost equally often.
-                        Right now, people don&apos;t see you in one consistent
-                        way.
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <h1 className="mt-4 text-3xl font-black leading-tight tracking-tighter">
-                        {socialPattern.title}
-                      </h1>
+                    {hasTie ? (
+                      <>
+                        <h1 className="font-identity mt-3 text-[27px] leading-[1.08] tracking-[-0.035em]">
+                          Your social identity is still forming.
+                        </h1>
 
-                      <p className="mt-5 text-sm font-bold leading-6 text-black/70">
-                        {socialPattern.body}
-                      </p>
-                    </>
-                  )}
-                </div>
+                        <p className="mt-4 text-[12px] leading-5 text-black/65">
+                          Two different perceptions appeared almost equally
+                          often. People do not see one dominant side of you yet.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <h1 className="font-identity mt-3 text-[28px] leading-[1.07] tracking-[-0.04em]">
+                          {socialPattern.title}
+                        </h1>
 
-                <div className="mt-5 rounded-3xl border border-white/10 bg-white/5 px-5 py-4">
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/35">
+                        <p className="mt-4 text-[12px] leading-5 text-black/65">
+                          {socialPattern.body}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </section>
+
+                <section className="mt-3 rounded-[16px] border border-white/[0.09] bg-white/[0.04] px-4 py-3">
+                  <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-foreground-muted">
                     Confidence
                   </p>
 
-                  <p className="mt-2 font-mono text-sm leading-6 text-white/60">
-                    {topTrait?.count || 0} of {totalPicks} friends formed this
+                  <p className="mt-1.5 text-[10px] text-foreground-secondary">
+                    {topTrait?.count || 0} of {totalPicks} picks formed this
                     pattern.
                   </p>
-                </div>
+                </section>
 
-                <div className="mt-8 rounded-3xl border border-white/15 bg-white/3 px-6 py-5">
-                  <p className="font-mono text-sm uppercase tracking-[0.22em] text-lime-400">
+                <section className="mt-4 rounded-[20px] border border-white/[0.09] bg-white/[0.025] px-4 py-4">
+                  <p className="text-[8px] font-bold uppercase tracking-[0.21em] text-accent">
                     Complete identity report locked
                   </p>
 
-                  <p className="mt-4 text-2xl font-black leading-tight tracking-tight text-white">
+                  <h2 className="font-identity mt-3 text-[21px] leading-[1.1] tracking-[-0.03em]">
                     There is more your friends revealed.
-                  </p>
+                  </h2>
 
-                  <div className="mt-5 space-y-3">
-                    <div className="rounded-2xl bg-white/7 px-4 py-3">
-                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-white/35">
+                  <div className="mt-4 space-y-2">
+                    <div className="rounded-[12px] bg-white/[0.05] px-3 py-3">
+                      <p className="text-[8px] font-bold uppercase tracking-[0.17em] text-foreground-muted">
                         Unlocked
                       </p>
-                      <p className="mt-1 text-sm font-black text-white">
-                        Your strongest social signal: {topTrait?.label || 'Hidden'}
+
+                      <p className="mt-1 text-[10px] font-semibold text-foreground">
+                        Strongest signal: {topTrait?.label || 'Hidden'}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-white/5 px-4 py-3">
-                      <p className="text-sm font-bold text-white/45">
-                       🔒 Why people keep seeing this side of you
-                      </p>
-                    </div>
+                    {[
+                      'Why people keep seeing this side',
+                      'The contradiction in how people read you',
+                      'Your first-impression gap',
+                    ].map((item) => (
+                      <div
+                        key={item}
+                        className="flex items-center gap-2 rounded-[12px] bg-white/[0.035] px-3 py-3"
+                      >
+                        <span className="text-[9px] text-accent">🔒</span>
 
-                    <div className="rounded-2xl bg-white/5 px-4 py-3">
-                      <p className="text-sm font-bold text-white/45">
-                       🔒 The contradiction in how friends read you
-                    </p>
+                        <p className="text-[10px] font-medium text-foreground-muted">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-
-                  <div className="rounded-2xl bg-white/5 px-4 py-3">
-                    <p className="text-sm font-bold text-white/45">
-                     🔒 Your first-impression vs real-impression gap
-                    </p>
-                  </div>
-                 </div>
-
-                    <p className="mt-5 font-mono text-xs leading-5 text-white/35">
-                      Unlock the complete report to see the deeper identity read behind this
-                      pattern.
-                    </p>
-                </div>
+                </section>
               </>
             ) : (
               <>
-                <p className="font-mono text-sm uppercase tracking-[0.24em] text-white/50">
-                  3 friends responded
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-foreground-muted">
+                  {totalPicks} anonymous response
+                  {totalPicks !== 1 ? 's' : ''}
                 </p>
 
-                <p className="mt-4 text-5xl font-light leading-[0.95] tracking-[-0.08em] text-lime-400">
+                <h1 className="font-identity mt-4 text-[33px] leading-[1.02] tracking-[-0.045em]">
                   They formed one clear pattern about you.
+                </h1>
+
+                <p className="mt-4 text-[11px] leading-5 text-foreground-secondary">
+                  Your result is ready, but the strongest social signal is still
+                  hidden.
                 </p>
 
-                <p className="mt-6 font-mono text-base leading-7 text-white/55">
-                  Your result is ready, but the main signal is hidden.
-                </p>
+                <section className="relative mt-6 overflow-hidden rounded-[20px] border border-accent/20 bg-white/[0.025] px-4 py-4">
+                  <div className="pointer-events-none absolute -right-14 -top-16 h-40 w-40 rounded-full bg-accent/10 blur-[70px]" />
 
-                <div className="mt-8 rounded-3xl border border-white/15 px-6 py-5">
-                  <p className="font-mono text-sm uppercase tracking-[0.22em] text-white/45">
-                    Main signal locked
-                  </p>
+                  <div className="relative">
+                    <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-accent">
+                      Main signal locked
+                    </p>
 
-                  <div className="mt-5 h-5 rounded-full bg-white/10 blur-sm" />
-                  <div className="mt-3 h-5 w-3/4 rounded-full bg-white/10 blur-sm" />
+                    <div className="mt-5 h-3.5 rounded-full bg-white/[0.10] blur-[3px]" />
+                    <div className="mt-3 h-3.5 w-3/4 rounded-full bg-white/[0.07] blur-[3px]" />
 
-                  <p className="mt-4 font-mono text-xs leading-5 text-white/35">
-                    Unlock to see the social pattern your friends created.
-                  </p>
-                </div>
+                    <p className="mt-4 text-[10px] leading-5 text-foreground-muted">
+                      Unlock the social pattern your friends consistently
+                      formed.
+                    </p>
+                  </div>
+                </section>
               </>
             )}
           </div>
 
-          <div className="mt-auto">
+          <div className="relative mt-auto pt-5">
             <ResultCtaButton
               slug={slug}
               hasPatternUnlock={hasPatternUnlock}
               hasFullUnlock={false}
             />
-
-            <p className="mt-5 text-center font-mono text-sm tracking-wider text-white/35">
-              traits-app-gold.vercel.app
-            </p>
           </div>
         </div>
       </section>

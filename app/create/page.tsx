@@ -245,144 +245,198 @@ export default function CreatePage() {
     <main className="min-h-screen bg-black px-6 py-8 text-white">
       <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
 
-  <p className="text-xs font-bold uppercase tracking-[0.28em] text-lime-400">
+  <div className="flex items-center justify-center gap-2">
+  <span className="h-2 w-2 rounded-full bg-accent" />
+  <span className="text-xs font-semibold uppercase tracking-[0.28em] text-foreground-secondary">
     Create Mirror
+  </span>
+</div>
+
+<div className="mt-8 text-center">
+  <p className="text-sm text-foreground-secondary">
+    Step 1 of 3
   </p>
 
-        <h1 className="mt-4 text-4xl font-black leading-tight">
-          What do you want your friends to reveal?
-        </h1>
+  <div className="mt-4 flex justify-center gap-2">
+    <span className="h-2 w-2 rounded-full bg-accent" />
+    <span className="h-2 w-2 rounded-full bg-border" />
+    <span className="h-2 w-2 rounded-full bg-border" />
+  </div>
 
-        <div className="mt-8">
+  <h1 className="font-identity mt-8 text-4xl leading-tight text-foreground">
+    What should
+    <br />
+    your friends reveal?
+  </h1>
+
+  <p className="mx-auto mt-5 max-w-sm text-[15px] leading-7 text-foreground-secondary">
+    Choose a category and we'll create the perfect question for your friends to answer anonymously.
+  </p>
+</div>
+
+       <div className="mt-10">
   <button
     type="button"
     onClick={() => setShowCategories((current) => !current)}
-    className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-left"
+    className="flex w-full items-center justify-between rounded-[16px] border border-border bg-surface px-5 py-4 text-left transition hover:border-accent"
   >
     <span>
-      <span className="block text-xs font-bold uppercase tracking-[0.2em] text-white/35">
+      <span className="block text-xs font-semibold uppercase tracking-[0.2em] text-foreground-muted">
         Category
       </span>
-      <span className="mt-1 block text-base font-bold text-white">
+
+      <span className="mt-1 block text-base font-semibold text-foreground">
         {selectedCategory
           ? categories.find((category) => category.id === selectedCategory)?.label
           : 'Select category'}
       </span>
     </span>
 
-    <span className="text-sm font-bold text-lime-400">
-      {showCategories ? 'Close' : 'Change'}
+    <span className="text-sm font-semibold text-accent">
+      {showCategories ? 'Close' : selectedCategory ? 'Change' : 'Choose'}
     </span>
   </button>
 
   {showCategories ? (
-    <div className="mt-3 grid grid-cols-1 gap-3">
-      {categories.map((category) => {
-        const isSelected = selectedCategory === category.id
+  <div className="mt-4 grid gap-3">
+    {categories.map((category) => {
+      const isSelected = selectedCategory === category.id
 
-        return (
-          <button
-            key={category.id}
-            type="button"
-            onClick={() => handleCategoryChange(category.id)}
-            className={`rounded-2xl border px-5 py-4 text-left text-sm font-bold ${
-              isSelected
-                ? 'border-lime-400 bg-lime-400/10 text-lime-400'
-                : 'border-white/10 bg-white/5 text-white'
-            }`}
-          >
-            {category.label}
-          </button>
-        )
-      })}
-    </div>
-  ) : null}
+      return (
+        <button
+          key={category.id}
+          type="button"
+          onClick={() => handleCategoryChange(category.id)}
+          className={`rounded-[16px] border px-5 py-4 text-left transition ${
+            isSelected
+              ? 'border-accent bg-accent/10 text-foreground shadow-[0_0_0_1px_var(--accent)]'
+              : 'border-border bg-surface text-foreground-secondary hover:border-accent hover:bg-surface-muted hover:text-foreground'
+          }`}
+        >
+          <span className="text-sm font-semibold">{category.label}</span>
+        </button>
+      )
+    })}
+  </div>
+) : null}
 </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => handleToneChange('plus')}
-            className={`rounded-2xl border px-4 py-3 text-sm font-bold ${
-              selectedTone === 'plus'
-                ? 'border-lime-400 bg-lime-400/10 text-lime-400'
-                : 'border-white/10 bg-white/5 text-white'
-            }`}
-          >
-            Gas Me Up
-          </button>
+        <div className="mt-6">
+  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground-muted">
+    Tone
+  </p>
 
-          <button
-            type="button"
-            onClick={() => handleToneChange('minus')}
-            className={`rounded-2xl border px-4 py-3 text-sm font-bold ${
-              selectedTone === 'minus'
-                ? 'border-red-400 bg-red-400/10 text-red-400'
-                : 'border-white/10 bg-white/5 text-white'
-            }`}
-          >
-            Be Brutal
-          </button>
-        </div>
+  <div className="mt-3 grid grid-cols-2 gap-3">
+    <button
+      type="button"
+      onClick={() => handleToneChange('plus')}
+      className={`rounded-[14px] border px-4 py-4 text-sm font-semibold transition ${
+        selectedTone === 'plus'
+          ? 'border-accent bg-accent text-accent-foreground'
+          : 'border-border bg-surface text-foreground-secondary hover:border-accent hover:text-foreground'
+      }`}
+    >
+      Gas Me Up
+    </button>
+
+    <button
+      type="button"
+      onClick={() => handleToneChange('minus')}
+      className={`rounded-[14px] border px-4 py-4 text-sm font-semibold transition ${
+        selectedTone === 'minus'
+          ? 'border-accent bg-accent text-accent-foreground'
+          : 'border-border bg-surface text-foreground-secondary hover:border-accent hover:text-foreground'
+      }`}
+    >
+      Be Brutal
+    </button>
+  </div>
+</div>
 
         {selectedCategory ? (
           <>
-            <div className="mt-8 flex items-center justify-between">
-              <p className="text-sm text-white/40">Pick one question</p>
+  <div className="mt-10 flex items-center justify-between">
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground-muted">
+        Questions
+      </p>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedQuestion('')
-                  setCustomQuestion('')
-                  setError('')
-                  setShuffleKey((current) => current + 1)
-                }}
-                className="rounded-full border border-white/10 px-4 py-2 text-sm font-bold text-lime-400"
-              >
-                Shuffle
-              </button>
-            </div>
+      <h2 className="mt-1 text-lg font-semibold text-foreground">
+        Pick one question
+      </h2>
+    </div>
 
-            <div className="mt-4 space-y-3">
-              {visibleQuestions.map((question) => {
-                const isSelected = selectedQuestion === question
+    <button
+      type="button"
+      onClick={() => {
+        setSelectedQuestion('')
+        setCustomQuestion('')
+        setError('')
+        setShuffleKey((current) => current + 1)
+      }}
+      className="rounded-[14px] border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-secondary transition hover:border-accent hover:text-foreground"
+    >
+      Shuffle
+    </button>
+  </div>
 
-                return (
-                  <button
-                    key={question}
-                    type="button"
-                    onClick={() => {
-                      setSelectedQuestion(question)
-                      setCustomQuestion('')
-                      setError('')
-                    }}
-                    className={`w-full rounded-2xl border px-5 py-4 text-left ${
-                      isSelected
-                        ? 'border-lime-400 bg-lime-400/10 text-lime-400'
-                        : 'border-white/10 bg-white/5 text-white'
-                    }`}
-                  >
-                    {isSelected ? `✓ ${question}` : question}
-                  </button>
-                )
-              })}
-            </div>
+  <div className="mt-5 space-y-3">
+    {visibleQuestions.map((question) => {
+      const isSelected = selectedQuestion === question
 
-            <input
-              type="text"
-              maxLength={90}
-              value={customQuestion}
-              onChange={(event) => {
-                setCustomQuestion(event.target.value)
-                setSelectedQuestion('')
-                setError('')
-              }}
-              placeholder="Or type your own sharp question..."
-              className="mt-6 h-14 w-full rounded-2xl border border-white/10 bg-white/5 px-5 outline-none placeholder:text-white/30"
+      return (
+        <button
+          key={question}
+          type="button"
+          onClick={() => {
+            setSelectedQuestion(question)
+            setCustomQuestion('')
+            setError('')
+          }}
+          className={`w-full rounded-[16px] border px-5 py-5 text-left transition ${
+            isSelected
+              ? 'border-accent bg-surface text-foreground'
+              : 'border-border bg-surface text-foreground-secondary hover:border-accent hover:text-foreground'
+          }`}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className={`mt-1 h-5 w-5 rounded-full border ${
+                isSelected
+                  ? 'border-accent bg-accent'
+                  : 'border-border'
+              }`}
             />
-          </>
-        ) : null}
+
+            <span className="leading-7">
+              {question}
+            </span>
+          </div>
+        </button>
+      )
+    })}
+  </div>
+
+  <div className="mt-8">
+    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground-muted">
+      Or write your own
+    </label>
+
+    <input
+      type="text"
+      maxLength={90}
+      value={customQuestion}
+      onChange={(event) => {
+        setCustomQuestion(event.target.value)
+        setSelectedQuestion('')
+        setError('')
+      }}
+      placeholder="Ask something unique about yourself..."
+      className="mt-3 h-14 w-full rounded-[16px] border border-border bg-surface px-5 text-foreground outline-none placeholder:text-foreground-muted focus:border-accent"
+    />
+  </div>
+</>
+) : null}
 
         {error ? <p className="mt-4 text-sm text-red-400">{error}</p> : null}
 
@@ -390,7 +444,7 @@ export default function CreatePage() {
           type="button"
           onClick={handleCreate}
           disabled={loading}
-          className="mt-8 h-14 rounded-2xl bg-lime-400 font-bold text-black disabled:opacity-50"
+          className="mt-8 h-14 w-full rounded-[14px] bg-accent font-semibold text-accent-foreground transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
       >
           {loading ? 'Creating Mirror...' : 'Create My Mirror'}
         </button>

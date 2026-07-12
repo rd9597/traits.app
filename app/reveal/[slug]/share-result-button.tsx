@@ -37,7 +37,7 @@ export default function ShareResultButton({
       target="_blank"
       rel="noreferrer"
       onClick={trackShare}
-      className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
+      className="block w-full rounded-[12px] border border-[#FF6673]/25 bg-[#FF6673]/10 px-5 py-3 text-center text-xs font-bold text-[#FF8590] transition-colors hover:bg-[#FF6673]/15"
     >
       Share My Result
     </a>

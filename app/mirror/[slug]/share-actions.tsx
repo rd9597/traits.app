@@ -60,30 +60,58 @@ export default function ShareActions({ slug, question, traitCount }: Props) {
     }, 1600)
   }
 
+  async function shareMirror() {
+  if (!navigator.share) {
+    await copyLink()
+    setNotice('Share link copied.')
+    return
+  }
+
+  try {
+    await navigator.share({
+      title: 'Identity Mirror',
+      text: `Give me one honest trait:\n\n${question}`,
+      url: shareUrl,
+    })
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      return
+    }
+
+    setNotice('Could not open sharing options.')
+  }
+}
+
   return (
-    <div className="mt-6 grid gap-3">
-      {notice ? (
-        <div className="rounded-2xl border border-lime-400/20 bg-lime-400/10 px-5 py-4">
-          <p className="text-sm font-black text-lime-400">{notice}</p>
-        </div>
-      ) : null}
+  <div className="mt-6 space-y-3">
+    {notice ? (
+      <div className="rounded-[16px] border border-accent/25 bg-accent/10 px-5 py-4">
+        <p className="text-sm font-semibold text-accent">{notice}</p>
+      </div>
+    ) : null}
 
-      <a
-        href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
-        target="_blank"
-        rel="noreferrer"
-        className="rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-      >
-        Share on WhatsApp
-      </a>
+    <div className="grid grid-cols-[1fr_auto] gap-3">
+  <button
+    type="button"
+    onClick={shareMirror}
+    className="flex h-14 items-center justify-center rounded-[16px] bg-accent px-5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-hover active:scale-[0.99]"
+  >
+    Sent it. Let them guess.
+  </button>
 
-      <button
-        type="button"
-        onClick={copyLink}
-        className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-sm font-black text-white"
-      >
-        {copied ? 'Link copied' : 'Copy link'}
-      </button>
+  <button
+    type="button"
+    onClick={copyLink}
+    aria-label={copied ? 'Link copied' : 'Copy link'}
+    className="flex h-14 w-14 items-center justify-center rounded-[16px] border border-border bg-surface text-xl text-foreground transition hover:border-accent hover:bg-surface-muted active:scale-[0.98]"
+  >
+    {copied ? '✓' : '⧉'}
+  </button>
+</div>
+
+   <p className="mt-3 text-center text-xs text-foreground-muted">
+     {copied ? 'Link copied' : 'Share anywhere or copy the link'}
+   </p>
     </div>
   )
 }

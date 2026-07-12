@@ -32,6 +32,11 @@ type RazorpayCheckoutOptions = {
   name: string
   description: string
   order_id: string
+  prefill: {
+    name: string
+    email: string
+    contact: string
+  }
   handler: (response: RazorpayPaymentResponse) => void
   theme: {
     color: string
@@ -98,11 +103,11 @@ export default function ResultCtaButton({
       if (unlockTier === 'full') {
         router.push(`/result/${slug}/analytics`)
         return
-    }
+      }
 
       router.refresh()
       return
-}
+    }
 
     const razorpay = new window.Razorpay({
       key: order.key,
@@ -114,6 +119,11 @@ export default function ResultCtaButton({
           ? 'Unlock Social Pattern'
           : 'Unlock Complete Identity Report',
       order_id: order.orderId,
+      prefill: {
+        name: 'Test User',
+        email: 'test@example.com',
+        contact: '9000000000',
+      },
       handler: async (paymentResponse) => {
         const verifyResponse = await fetch('/api/razorpay/verify', {
           method: 'POST',
@@ -133,13 +143,13 @@ export default function ResultCtaButton({
           if (unlockTier === 'full') {
             router.push(`/result/${slug}/analytics`)
             return
-        }
+          }
 
-        router.refresh()
-    }
+          router.refresh()
+        }
       },
       theme: {
-        color: '#a3e635',
+        color: '#ff5a5f',
       },
     })
 
@@ -154,11 +164,11 @@ export default function ResultCtaButton({
     <button
       type="button"
       onClick={handleUnlock}
-      className="block w-full rounded-full bg-lime-400 px-6 py-5 text-center text-lg font-medium text-black"
+      className="block w-full rounded-[15px] bg-accent px-5 py-4 text-center text-sm font-bold text-accent-foreground transition-colors hover:bg-accent-hover"
     >
       {hasPatternUnlock
-        ? 'Unlock My Complete Report · ₹49'
-        : 'Reveal My Social Pattern · ₹19'}
+        ? 'Unlock Complete Identity Report — ₹49'
+        : 'Beyond the surface — ₹19'}
     </button>
   )
 }

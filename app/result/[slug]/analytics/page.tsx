@@ -245,13 +245,13 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
               identity mirror
             </p>
 
-            <p className="rounded-full bg-[#f7c96f] px-5 py-2 text-sm font-semibold text-black">
+            <p className="rounded-full border border-[#3A3A43] bg-[#18181D] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#FF5A5F]">
               {tier}
             </p>
           </div>
 
           <div className="mt-10 flex items-center gap-6">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-2 border-lime-400/45 bg-lime-400/15 text-4xl font-black text-lime-400">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-[#3A3A43] bg-[#17171C] text-4xl font-black text-[#FF5A5F] shadow-[0_0_40px_rgba(255,90,95,0.18)]">
               {archetype
                 .split(' ')
                 .map((word) => word[0])
@@ -306,7 +306,7 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
           </div>
 
           <div className="mt-9 border-t border-white/10 pt-7">
-            <p className="text-sm uppercase tracking-[0.24em] text-lime-400">
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#FF5A5F]">
               Core Social Identity
             </p>
 
@@ -331,9 +331,9 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
          {[topTrait, secondTrait, thirdTrait].map((trait, index) => (
          <div
             key={trait?.id || index}
-            className="rounded-3xl border border-white/10 bg-black/25 px-4 py-4"
+            className="rounded-3xl border border-[#2B2B33] bg-[#17171C] px-4 py-4"
          >
-           <p className="font-mono text-xs text-lime-400">
+           <p className="font-mono text-xs text-[#FF5A5F]">
               0{index + 1}
            </p>
 
@@ -378,11 +378,11 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
        </div>
 
         <div className="mt-8 grid grid-cols-2 gap-3">
-          <div className="rounded-3xl border border-lime-400/20 bg-lime-400/10 px-5 py-5">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-lime-400">
+          <div className="rounded-3xl border border-[#3A3A43] bg-[#17171C] px-5 py-5">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-[#FF5A5F]">
               Trust Score
             </p>
-            <p className="mt-3 text-4xl font-black text-lime-400">
+            <p className="mt-3 text-4xl font-black text-[#FF5A5F]">
               {confidence}%
             </p>
             <p className="mt-2 text-sm leading-5 text-white/45">
@@ -418,9 +418,9 @@ export default async function ResultAnalyticsPage({ params }: PageProps) {
 
           <Link
             href={`/result/${slug}/share`}
-            className="mt-8 flex w-full items-center justify-center rounded-3xl bg-lime-400 px-6 py-5 text-lg font-black text-black transition hover:brightness-110"
+            className="mt-8 flex w-full items-center justify-center rounded-[16px] bg-[#FF5A5F] px-6 py-4 text-base font-semibold text-white transition hover:bg-[#FF6C70]"
           >
-            Create Share Card →
+            Define Your Calibre 
           </Link>
         </section>
       </section>

@@ -69,7 +69,7 @@ export default function ReportMirrorButton({ mirrorId, mirrorSlug }: Props) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="text-xs font-bold text-white/35 underline underline-offset-4"
+          className="inline-flex items-center gap-2 rounded-[12px] border border-border bg-surface px-4 py-3 text-xs font-semibold text-foreground-secondary transition hover:border-accent hover:text-foreground"
         >
           Report this mirror
         </button>

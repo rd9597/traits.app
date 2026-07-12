@@ -101,124 +101,209 @@ export default async function RevealPage({ params }: PageProps) {
   const secondaryTraits = rankedTraits.slice(1)
   const socialPattern = getSocialPattern(topTrait?.label)
 
-  return (
-    <main className="min-h-screen bg-black px-5 py-8 text-white">
-      <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-lime-400">
-          Reveal unlocked
-        </p>
+        return (
+    <main className="min-h-screen bg-background px-5 pb-24 pt-6 text-foreground">
+      <section className="mx-auto w-full max-w-md">
+        <header className="text-center">
+          <div className="flex items-center justify-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
 
-        <h1 className="mt-5 text-3xl font-black leading-tight tracking-tight">
-          Your Mirror says...
-        </h1>
+            <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-accent">
+              Reveal unlocked
+            </p>
+          </div>
 
-        <p className="mt-3 text-sm leading-6 text-white/50">
-          Based on {totalTraits} anonymous traits from friends.
-        </p>
+          <h1 className="font-identity mt-3 text-[28px] leading-tight tracking-[-0.035em]">
+            Your Mirror opened.
+          </h1>
+
+          <p className="mt-1 text-[10px] text-foreground-muted">
+            Based on {totalTraits} anonymous trait
+            {totalTraits !== 1 ? 's' : ''}.
+          </p>
+        </header>
 
         {topTrait ? (
-          <div className="mt-8 rounded-3xl border border-lime-400/40 bg-lime-400 px-5 py-6 text-black">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
-              Main energy
-            </p>
+          <>
+            <section className="relative mt-5 flex flex-col items-center text-center">
+              <div className="pointer-events-none absolute top-8 h-48 w-48 rounded-full bg-accent/10 blur-[60px]" />
 
-            <h2 className="mt-4 text-3xl font-black leading-tight tracking-tight">
-              {socialPattern.title}
-            </h2>
+              <div className="relative flex h-44 w-44 items-center justify-center rounded-full border border-accent/20 bg-surface shadow-[0_0_50px_rgba(255,90,95,0.08)]">
+                <div className="absolute inset-3 rounded-full border border-white/[0.05]" />
+                <div className="absolute inset-7 rounded-full border border-white/[0.04]" />
 
-            <p className="mt-5 text-sm font-bold leading-6 text-black/70">
-              {socialPattern.body}
-            </p>
-
-            <p className="mt-4 text-sm font-black text-black">
-              {topTrait.count} friend
-              {topTrait.count !== 1 ? 's' : ''} picked this.
-            </p>
-          </div>
-        ) : null}
-
-        {secondaryTraits.length > 0 ? (
-          <div className="mt-5 rounded-2xl border border-white/10 bg-white/4 p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">
-              Also showed up
-            </p>
-
-            <div className="mt-4 space-y-3">
-              {secondaryTraits.map((trait) => (
-                <div
-                  key={trait.id}
-                  className="flex items-center justify-between gap-4 rounded-2xl bg-white/5 px-4 py-3"
-                >
-                  <p className="text-sm font-black text-white">
-                    {trait.label}
+                <div className="relative px-5">
+                  <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-accent">
+                    Most repeated
                   </p>
 
-                  <p className="shrink-0 text-xs font-bold text-lime-400">
-                    {trait.count}
+                  <h2 className="font-identity mt-3 text-[28px] leading-[1.02] tracking-[-0.04em]">
+                    {topTrait.label}
+                  </h2>
+
+                  <p className="mt-3 text-[9px] font-semibold text-foreground-secondary">
+                    {topTrait.count} friend
+                    {topTrait.count !== 1 ? 's' : ''} chose this
                   </p>
                 </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
+              </div>
 
-        <div className="mt-5 rounded-2xl border border-white/10 bg-white/4 p-5">
-          <p className="text-sm font-bold leading-6 text-white/60">
-            Your friends did not answer a personality test. They picked the
-            traits they actually felt from you.
-          </p>
-        </div>
-
-        <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-5">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-400">
-            Complete Identity Report
-          </p>
-
-          <h3 className="mt-3 text-2xl font-black leading-tight tracking-tight text-white">
-            See the full version your friends unlocked about you.
-          </h3>
-
-          <p className="mt-3 text-sm font-bold leading-6 text-white/55">
-            Get the deeper read: why people see you this way, what it says about your
-            social image, and the part they may not say directly.
-          </p>
-
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            <div className="rounded-2xl bg-white/5 p-3 text-center">
-              <p className="text-lg font-black text-white">3</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
-                Signals
+              <p className="mt-5 max-w-[330px] text-[17px] font-semibold leading-6 tracking-[-0.02em]">
+                {socialPattern.title}
               </p>
-            </div>
 
-            <div className="rounded-2xl bg-white/5 p-3 text-center">
-              <p className="text-lg font-black text-white">₹49</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
-                Unlock
+              <p className="mt-2 max-w-[340px] text-[11px] leading-5 text-foreground-secondary">
+                {socialPattern.body}
               </p>
-            </div>
+            </section>
 
-            <div className="rounded-2xl bg-white/5 p-3 text-center">
-              <p className="text-lg font-black text-white">1</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
-                Report
+            {secondaryTraits.length > 0 ? (
+              <section className="mt-5">
+                <div className="flex items-center gap-3">
+                  <span className="h-px flex-1 bg-border" />
+
+                  <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-foreground-muted">
+                    They noticed this too
+                  </p>
+
+                  <span className="h-px flex-1 bg-border" />
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {secondaryTraits.map((trait, index) => (
+                    <div
+                      key={trait.id}
+                      className="rounded-card border border-border bg-surface px-4 py-3"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-[9px] font-bold text-foreground-muted">
+                          0{index + 2}
+                        </p>
+
+                        <div className="flex items-center gap-1.5">
+                          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+
+                          <span className="text-[9px] font-bold text-foreground-secondary">
+                            {trait.count}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="mt-2 text-[12px] font-semibold leading-4 text-foreground">
+                        {trait.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            <section className="mt-5 text-center">
+              <p className="font-identity text-[18px] leading-6">
+                You did not choose these words.
               </p>
-            </div>
-          </div>
 
-          <a
-            href={`/result/${slug}`}
-            className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-         >
-            Unlock Complete Report →
-        </a>
+              <p className="mt-1 text-[10px] leading-4 text-foreground-muted">
+                This was the impression people naturally formed about you.
+              </p>
+            </section>
+          </>
+        ) : (
+          <section className="mt-6 rounded-card border border-border bg-surface px-5 py-7 text-center">
+            <p className="font-identity text-[22px]">
+              Your mirror is still forming.
+            </p>
+
+            <p className="mx-auto mt-2 max-w-[280px] text-[10px] leading-5 text-foreground-muted">
+              More responses are needed before your strongest traits can be
+              revealed.
+            </p>
+          </section>
+        )}
+<section className="relative mt-6 overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#141417] px-5 py-5">
+  <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-accent/12 blur-[80px]" />
+  <div className="pointer-events-none absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-accent/5 blur-[70px]" />
+
+  <div className="relative">
+      <div>
+        <p className="text-[8px] font-bold uppercase tracking-[0.24em] text-accent">
+          Hidden layer
+        </p>
+
+        <h3 className="font-identity mt-3 max-w-[250px] text-[25px] leading-[1.05] tracking-[-0.035em] text-foreground">
+          There’s more they didn’t say first.
+        </h3>
       </div>
 
-        <ShareResultButton
-          slug={slug}
-          appUrl={appUrl}
-          topTraitLabel={topTrait?.label}
-        />
+    <p className="mt-4 max-w-[330px] text-[11px] leading-5 text-foreground-secondary">
+      Unlock the quieter traits, rare impressions and the full ranking hidden
+      inside your responses.
+    </p>
+
+    <div className="mt-5 grid grid-cols-3 gap-2">
+      {[
+        ['04', 'Hidden'],
+        ['05', 'Rare'],
+        ['06', 'Unexpected'],
+      ].map(([rank, label]) => (
+        <div
+          key={rank}
+          className="relative overflow-hidden rounded-[14px] border border-white/[0.07] bg-white/[0.025] px-3 py-3"
+        >
+          <div className="pointer-events-none absolute -right-5 -top-5 h-14 w-14 rounded-full bg-accent/8 blur-2xl" />
+
+          <div className="relative">
+            <div className="flex items-center justify-between">
+              <p className="text-[8px] font-bold text-foreground-muted">
+                {rank}
+              </p>
+
+              <span className="text-[9px] text-foreground-muted">⌁</span>
+            </div>
+
+            <p className="mt-4 text-[10px] font-semibold text-foreground-secondary">
+              {label}
+            </p>
+
+            <div className="mt-2 h-1.5 w-full rounded-full bg-white/[0.07] blur-[1px]" />
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-5 flex items-center justify-between gap-4 border-t border-white/[0.07] pt-4">
+      <div>
+        <p className="text-[10px] font-semibold text-foreground">
+          Complete your mirror
+        </p>
+
+        <p className="mt-1 text-[9px] text-foreground-muted">
+          Hidden traits · Rare signals · Full ranking
+        </p>
+      </div>
+
+      <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-accent">
+        Instant access
+      </p>
+    </div>
+
+    <a
+      href={`/result/${slug}`}
+      className="mt-4 flex w-full items-center justify-between rounded-[15px] bg-accent px-4 py-3.5 text-xs font-bold text-accent-foreground transition-colors hover:bg-accent-hover"
+    >
+      <span>Unlock hidden traits</span>
+      <span>₹19 →</span>
+    </a>
+  </div>
+</section>
+
+        <div className="mt-3">
+          <ShareResultButton
+            slug={slug}
+            appUrl={appUrl}
+            topTraitLabel={topTrait?.label}
+          />
+        </div>
       </section>
     </main>
   )

@@ -67,96 +67,121 @@ export default async function MirrorPage({ params }: PageProps) {
     : `${hoursLeft}h ${minutesLeft}m left`
 
   if (isCreator) {
-    return (
-      <main className="min-h-screen bg-black px-5 py-8 text-white">
-        <section className="mx-auto flex min-h-[85vh] w-full max-w-md flex-col justify-center">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-lime-400">
-            Mirror created
-          </p>
+  return (
+    <main className="min-h-screen bg-background px-5 py-8 text-foreground">
+      <section className="mx-auto w-full max-w-md pb-10">
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-accent" />
 
-          <h1 className="mt-5 text-3xl font-black leading-tight tracking-tight">
-            Share this link with friends
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-foreground-secondary">
+              Your mirror is live
+            </p>
+          </div>
+
+          <h1 className="font-identity mt-6 text-4xl leading-tight">
+            See what they
+            <br />
+            really think.
           </h1>
 
-          <p className="mt-3 text-sm leading-6 text-white/50">
-            You cannot see the trait options on your own mirror. Only friends who open your shared link can give traits.
+          <p className="mx-auto mt-5 max-w-sm text-sm leading-7 text-foreground-secondary">
+            Share this mirror with friends. Every response stays anonymous.
+          </p>
+        </div>
+
+        <div className="relative mx-auto mt-10 flex aspect-square w-[260px] items-center justify-center overflow-hidden rounded-full border border-border bg-[radial-gradient(circle_at_50%_35%,rgba(255,90,95,0.22),transparent_48%),linear-gradient(160deg,#24242B,#111115)] shadow-[0_25px_80px_rgba(0,0,0,0.45)]">
+          <div className="absolute inset-5 rounded-full border border-white/5" />
+          <div className="absolute inset-10 rounded-full border border-white/5" />
+
+          <div className="relative z-10 text-center">
+            <p className="font-identity text-6xl leading-none text-foreground">
+              {traitCount}
+            </p>
+
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-foreground-secondary">
+              responses
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground-muted">
+            Your mirror asks
           </p>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/4 px-5 py-4 text-sm font-bold text-white">
+          <p className="font-identity mx-auto mt-4 max-w-sm text-2xl leading-snug text-foreground">
             {mirror.question}
-          </div>
+          </p>
+        </div>
 
-          <div className="mt-4 rounded-2xl border border-lime-400/20 bg-lime-400/10 px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-lime-400">
-              Time left
+        <div className="mt-8">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-foreground-secondary">
+              Reveal progress
             </p>
 
-            <p className="mt-2 text-xl font-black text-white">
-              {countdownText}
+            <p className="text-sm font-semibold text-accent">
+              {unlocked ? 'Ready to reveal' : `${remainingTraits} more needed`}
             </p>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/4 p-5">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">
-                  Traits collected
-                </p>
-
-                <p className="mt-2 text-2xl font-black">
-                  {Math.min(traitCount, unlockTarget)} / {unlockTarget}
-                </p>
-              </div>
-
-              <p className="text-right text-xs font-bold text-lime-400">
-                {unlocked ? 'Unlocked' : `${remainingTraits} more needed`}
-              </p>
-            </div>
-
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full rounded-full bg-lime-400"
-                style={{ width: `${progressPercent}%` }}
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {Array.from({ length: unlockTarget }).map((_, index) => (
+              <span
+                key={index}
+                className={`h-3 rounded-full transition ${
+                  index < traitCount ? 'bg-accent' : 'bg-surface-muted'
+                }`}
               />
-            </div>
+            ))}
+          </div>
 
-            <p className="mt-4 text-sm leading-6 text-white/50">
-              {unlocked
-                ? 'Your mirror result is ready to reveal.'
-                : 'Share your mirror to collect more anonymous traits.'}
-            </p>
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <span className="text-foreground-secondary">
+              {Math.min(traitCount, unlockTarget)} of {unlockTarget} responses
+            </span>
 
-            {unlocked && !isExpired ? (
-              <a
-                href={`/reveal/${slug}`}
-                className="mt-5 block w-full rounded-2xl bg-lime-400 px-5 py-4 text-center text-sm font-black text-black"
-       >
-                Reveal My Traits
-            </a>
+            <span className="text-foreground-secondary">
+              {countdownText}
+            </span>
+          </div>
+        </div>
+
+        {unlocked && !isExpired ? (
+          <a
+            href={`/reveal/${slug}`}
+            className="mt-8 flex h-14 w-full items-center justify-center rounded-[14px] bg-accent text-sm font-semibold text-accent-foreground transition hover:bg-accent-hover"
+          >
+            Reveal My Identity
+          </a>
         ) : null}
 
-        {!isExpired ? (
-  <div className="mt-5 rounded-2xl border border-lime-400/15 bg-lime-400/5 px-5 py-4">
-    <p className="text-xs font-bold uppercase tracking-[0.18em] text-lime-400">
-      Premium preview
-    </p>
+        <div className="mt-8 border-t border-border pt-8">
+          <p className="text-center text-sm font-medium text-foreground">
+            Send it to the people who know you best.
+          </p>
 
-    <p className="mt-2 text-sm leading-6 text-white/55">
-      After your basic reveal, unlock deeper insights from ₹19.
-    </p>
-  </div>
-) : null}
-        </div>
+          <p className="mt-2 text-center text-sm leading-6 text-foreground-secondary">
+            Free reveal unlocks at 3 responses.
+          </p>
 
           <ShareActions
             slug={slug}
             question={mirror.question}
             traitCount={traitCount}
-        />
-        </section>
-      </main>
-    )
-  }
+          />
+        </div>
+
+        {!isExpired ? (
+          <p className="mt-6 text-center text-xs leading-5 text-foreground-muted">
+            Deeper Social Pattern available after reveal from ₹19.
+          </p>
+        ) : null}
+      </section>
+    </main>
+  )
+}
 
   const { data: traits } = await supabase
     .from('mirror_traits')
@@ -167,29 +192,56 @@ export default async function MirrorPage({ params }: PageProps) {
   const mirrorTraits = (traits || []) as MirrorTrait[]
 
   return (
-    <main className="min-h-screen bg-black px-5 py-8 text-white">
-      <section className="mx-auto w-full max-w-md">
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/35">
-          Traits
-        </p>
+    <main className="min-h-screen bg-background px-4 pb-28 pt-5 text-foreground sm:px-5 sm:py-8">
+      <section className="mx-auto w-full max-w-[420px]">
+        <div className="text-center">
+  <div className="flex items-center justify-center gap-2">
+    <span className="h-2 w-2 rounded-full bg-accent" />
 
-        <h1 className="mt-5 text-3xl font-black leading-tight tracking-tight">
-          {mirror.question}
-        </h1>
+    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground-secondary">
+      Anonymous Mirror
+    </p>
+  </div>
 
-        <p className="mt-3 text-sm leading-6 text-white/50">
-          Pick the trait that fits this person best. Your trait stays anonymous.
-        </p>
+  <h1 className="font-identity mt-5 text-[2rem] leading-[1.08] text-foreground sm:mt-6 sm:text-4xl">
+    How do you
+    <br />
+    really see them?
+  </h1>
 
-        <div className="mt-5 rounded-2xl border border-lime-400/20 bg-lime-400/10 px-5 py-4">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-lime-400">
-            Time left
-          </p>
+  <p className="mx-auto mt-4 max-w-xs text-sm leading-6 text-foreground-secondary sm:mt-5 sm:max-w-sm sm:leading-7">
+    Pick the one trait that feels most true.
+    Every answer stays completely anonymous.
+  </p>
 
-          <p className="mt-2 text-xl font-black text-white">
-            {countdownText}
-          </p>
-        </div>
+  <div className="relative mx-auto mt-6 flex h-28 w-28 items-center justify-center sm:mt-8 sm:h-36 sm:w-36">
+  <span className="absolute inset-0 animate-ping rounded-full border-2 border-accent/50" />
+
+  <span className="absolute inset-2 animate-pulse rounded-full bg-accent/10" />
+
+  <div className="relative z-10 flex h-24 w-24 animate-[countdownBlink_1.2s_ease-in-out_infinite] items-center justify-center rounded-full border border-accent/50 bg-surface shadow-[0_0_45px_rgba(255,90,95,0.28)] sm:h-32 sm:w-32">
+    <div className="text-center">
+      <p className="text-xl font-bold leading-tight text-accent sm:text-3xl">
+        {countdownText}
+      </p>
+
+      <p className="mt-1 text-xs uppercase tracking-[0.18em] text-foreground-muted">
+        Remaining
+      </p>
+    </div>
+  </div>
+</div>
+
+  <div className="mt-7 rounded-[18px] border border-border bg-surface p-5 text-left sm:mt-10 sm:rounded-[20px] sm:p-6">
+    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-foreground-muted">
+      Mirror Question
+    </p>
+
+    <h2 className="font-identity mt-3 text-2xl leading-snug text-foreground sm:text-3xl">
+      {mirror.question}
+    </h2>
+  </div>
+</div>
 
         {isExpired ? (
           <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5">

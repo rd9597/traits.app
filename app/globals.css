@@ -1,26 +1,108 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f0f12;
+  --surface: #1a1a1f;
+  --surface-muted: #24242b;
+  --border: #2b2b33;
+
+  --foreground: #f6f4f1;
+  --foreground-secondary: #9b9ba7;
+  --foreground-muted: #696975;
+
+  --accent: #ff5a5f;
+  --accent-hover: #ff7074;
+  --accent-foreground: #0f0f12;
+
+  --success: #42d392;
+  --error: #ff5a5f;
+
+  --radius-card: 16px;
+  --radius-button: 14px;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-error: var(--error);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-fraunces);
+
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
 }
 
 body {
+  min-height: 100%;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.font-identity {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+@keyframes mirrorGlow {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 18px rgba(255, 90, 95, 0.08),
+      0 0 0 rgba(255, 90, 95, 0);
+  }
+
+  50% {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 42px rgba(255, 90, 95, 0.22),
+      0 0 70px rgba(255, 90, 95, 0.1);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 18px rgba(255, 90, 95, 0.08),
+      0 0 0 rgba(255, 90, 95, 0);
+  }
+}
+
+@keyframes countdownBlink {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 0.72;
+  }
 }

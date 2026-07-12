@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { toPng } from 'html-to-image'
 
@@ -17,6 +17,8 @@ type Props = {
   totalVotes: number
   traits: ShareTrait[]
 }
+
+type ProcessingAction = 'download' | 'share' | null
 
 function getCuriosityLine(label: string) {
   const normalized = label.toLowerCase()
@@ -48,6 +50,31 @@ function getCuriosityLine(label: string) {
   return 'Apparently, people notice something about me I do not say out loud.'
 }
 
+function dataUrlToBlob(dataUrl: string) {
+  const separatorIndex = dataUrl.indexOf(',')
+
+  if (separatorIndex === -1) {
+    throw new Error('Invalid image data')
+  }
+
+  const header = dataUrl.slice(0, separatorIndex)
+  const encodedData = dataUrl.slice(separatorIndex + 1)
+
+  const mimeType =
+    header.match(/^data:([^;]+);base64$/)?.[1] || 'image/png'
+
+  const binary = window.atob(encodedData)
+  const bytes = new Uint8Array(binary.length)
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index)
+  }
+
+  return new Blob([bytes], {
+    type: mimeType,
+  })
+}
+
 export default function ShareCardClient({
   slug,
   archetype,
@@ -56,20 +83,64 @@ export default function ShareCardClient({
   traits,
 }: Props) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const imageBlobRef = useRef<Blob | null>(null)
+  const isShareInFlightRef = useRef(false)
 
-  async function getImageBlob() {
-    if (!cardRef.current) return null
+  const [isImageReady, setIsImageReady] = useState(false)
+  const [processingAction, setProcessingAction] =
+    useState<ProcessingAction>(null)
 
-    const dataUrl = await toPng(cardRef.current, {
+  const curiosityLine = getCuriosityLine(topTraitLabel)
+
+  const secondaryTraits = traits
+    .filter((trait) => trait.label !== topTraitLabel)
+    .slice(0, 2)
+
+  async function createImageBlob() {
+    const card = cardRef.current
+
+    if (!card) {
+      throw new Error('Share card is unavailable')
+    }
+
+    const dataUrl = await toPng(card, {
       cacheBust: true,
       pixelRatio: 3,
-      backgroundColor: '#050505',
+      skipAutoScale: true,
     })
 
-    const response = await fetch(dataUrl)
-    return response.blob()
+    return dataUrlToBlob(dataUrl)
   }
+
+  useEffect(() => {
+    let cancelled = false
+    let frameId = 0
+
+    imageBlobRef.current = null
+    setIsImageReady(false)
+
+    frameId = window.requestAnimationFrame(() => {
+      void createImageBlob()
+        .then((blob) => {
+          if (cancelled) {
+            return
+          }
+
+          imageBlobRef.current = blob
+          setIsImageReady(true)
+        })
+        .catch((error) => {
+          if (!cancelled) {
+            console.error('Share image preparation failed:', error)
+          }
+        })
+    })
+
+    return () => {
+      cancelled = true
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [archetype, topTraitLabel, totalVotes, traits])
 
   function downloadBlob(blob: Blob) {
     const url = URL.createObjectURL(blob)
@@ -77,52 +148,113 @@ export default function ShareCardClient({
 
     link.href = url
     link.download = `identity-mirror-${slug}.png`
-    link.click()
+    link.style.display = 'none'
 
-    URL.revokeObjectURL(url)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+
+    window.setTimeout(() => {
+      URL.revokeObjectURL(url)
+    }, 1000)
   }
 
   async function handleDownload() {
-    setIsProcessing(true)
+    if (processingAction !== null) {
+      return
+    }
+
+    setProcessingAction('download')
 
     try {
-      const blob = await getImageBlob()
-      if (blob) downloadBlob(blob)
+      const blob =
+        imageBlobRef.current || (await createImageBlob())
+
+      imageBlobRef.current = blob
+      setIsImageReady(true)
+
+      downloadBlob(blob)
+    } catch (error) {
+      console.error('Image download failed:', error)
     } finally {
-      setIsProcessing(false)
+      setProcessingAction(null)
     }
   }
 
   async function handleShare() {
-    setIsProcessing(true)
+    if (processingAction !== null || isShareInFlightRef.current) {
+      return
+    }
+
+    const blob = imageBlobRef.current
+
+    if (!blob) {
+      return
+    }
+
+    if (typeof navigator.share !== 'function') {
+      console.error('Web Share API is not supported on this browser')
+      return
+    }
+
+    const file = new File(
+      [blob],
+      `identity-mirror-${slug}.png`,
+      {
+        type: 'image/png',
+      }
+    )
+
+    const isMobileDevice =
+      /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+
+    isShareInFlightRef.current = true
+    setProcessingAction('share')
+
+    const timeoutPromise = new Promise((_, reject) => {
+      window.setTimeout(() => {
+        reject(new Error('share-timeout'))
+      }, 8000)
+    })
 
     try {
-      const blob = await getImageBlob()
-      if (!blob) return
-
-      const file = new File([blob], `identity-mirror-${slug}.png`, {
-        type: 'image/png',
-      })
-
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          title: 'My Identity Mirror',
-          text: 'How my friends see me.',
-          files: [file],
-        })
-        return
+      if (
+        isMobileDevice &&
+        typeof navigator.canShare === 'function' &&
+        navigator.canShare({ files: [file] })
+      ) {
+        await Promise.race([
+          navigator.share({
+            title: 'My Identity Mirror',
+            text: 'How my friends see me.',
+            files: [file],
+          }),
+          timeoutPromise,
+        ])
+      } else {
+        await Promise.race([
+          navigator.share({
+            title: 'My Identity Mirror',
+            text: 'How my friends see me.',
+            url: window.location.href,
+          }),
+          timeoutPromise,
+        ])
       }
-
-      downloadBlob(blob)
+    } catch (error) {
+      if (
+        error instanceof DOMException &&
+        error.name === 'AbortError'
+      ) {
+        // user closed the share sheet, do nothing
+      } else {
+        console.error('Share failed or timed out:', error)
+      }
     } finally {
-      setIsProcessing(false)
+      isShareInFlightRef.current = false
+      setProcessingAction(null)
     }
   }
-
-  const curiosityLine = getCuriosityLine(topTraitLabel)
-  const secondaryTraits = traits
-    .filter((trait) => trait.label !== topTraitLabel)
-    .slice(0, 2)
 
   return (
     <main className="min-h-screen bg-black px-5 py-6 text-white">
@@ -136,13 +268,14 @@ export default function ShareCardClient({
 
         <div
           ref={cardRef}
-          className="relative mt-6 flex aspect-9/16 w-full flex-col overflow-hidden rounded-4xl border border-white/10 bg-[#060606] px-7 py-8 text-white"
+          className="relative mt-6 flex w-full flex-col overflow-hidden rounded-4xl border border-white/10 bg-[#060606] px-7 py-8 text-white"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(163,230,53,0.18),transparent_38%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-72 bg-linear-to-t from-lime-400/10 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,90,95,0.18),transparent_38%)]" />
+
+          <div className="absolute inset-x-0 bottom-0 h-72 bg-linear-to-t from-accent/10 via-transparent to-transparent" />
 
           <div className="relative z-10 flex items-center justify-between">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-lime-400">
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-[#FF5A5F]">
               Identity Mirror
             </p>
 
@@ -164,7 +297,7 @@ export default function ShareCardClient({
               {topTraitLabel}
             </h1>
 
-            <p className="mt-5 text-xl font-black leading-6 tracking-[-0.04em] text-lime-400">
+            <p className="mt-5 text-xl font-black leading-6 tracking-[-0.04em] text-accent">
               {archetype}
             </p>
           </div>
@@ -181,19 +314,21 @@ export default function ShareCardClient({
                 <p className="text-3xl font-black text-white">
                   {totalVotes}
                 </p>
+
                 <p className="mt-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/35">
                   Anon traits
                 </p>
               </div>
 
-              <div className="rounded-3xl border border-lime-400/20 bg-lime-400/10 px-4 py-4">
-                <p className="text-3xl font-black text-lime-400">
+              <div className="rounded-3xl border border-[#FF5A5F]/20 bg-[#FF5A5F]/10 px-4 py-4">
+                <p className="text-3xl font-black text-[#FF5A5F]">
                   secret
                 </p>
+
                 <p className="mt-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/35">
                   friends stayed hidden
                 </p>
-             </div>
+              </div>
             </div>
 
             {secondaryTraits.length > 0 ? (
@@ -217,10 +352,11 @@ export default function ShareCardClient({
 
             <div className="mt-7 border-t border-white/10 pt-5">
               <p className="text-xs font-bold leading-5 text-white/40">
-                Not a personality test. This came from people who actually know me.
+                Not a personality test. This came from people who
+                actually know me.
               </p>
 
-              <p className="mt-4 text-xs font-black uppercase tracking-[0.22em] text-lime-400">
+              <p className="mt-4 text-xs font-black uppercase tracking-[0.22em] text-accent">
                 identitymirror.app
               </p>
             </div>
@@ -231,22 +367,31 @@ export default function ShareCardClient({
           <button
             type="button"
             onClick={handleDownload}
-            disabled={isProcessing}
-            className="rounded-2xl border border-white/15 px-5 py-4 text-sm font-black text-white disabled:opacity-50"
+            disabled={processingAction !== null}
+            className="rounded-2xl border border-white/15 px-5 py-4 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Download
+            {processingAction === 'download'
+              ? 'Processing...'
+              : 'Download'}
           </button>
 
           <button
             type="button"
             onClick={handleShare}
-            disabled={isProcessing}
-            className="rounded-2xl bg-lime-400 px-5 py-4 text-sm font-black text-black disabled:opacity-50"
+            disabled={
+              !isImageReady ||
+              processingAction !== null
+            }
+            className="rounded-2xl bg-accent px-5 py-4 text-sm font-black text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Share
+            {!isImageReady
+              ? 'Preparing...'
+              : processingAction === 'share'
+                ? 'Processing...'
+                : 'Share'}
           </button>
-                  </div>
-        </section>
+        </div>
+      </section>
     </main>
   )
 }

@@ -3,15 +3,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
-const reveals = [
-  'someone just found out they are the "main character energy" of the friend group',
-  'someone just discovered they are everyone emergency contact bestie',
-  'a guy just got called "loud in a good way" by 3 anonymous friends',
-  'someone mirror cleared and it said "lowkey the glue of the group"',
-  'someone found out they give "main lead in a coming-of-age movie" vibes',
-  'someone just got told they are the one who would survive a horror movie',
-]
-
 export default function HomePage() {
   const [spot, setSpot] = useState({ x: -999, y: -999 })
   const [peeked, setPeeked] = useState(false)
@@ -35,223 +26,259 @@ export default function HomePage() {
     <main className="min-h-screen overflow-x-hidden bg-black text-white">
       <div className="pointer-events-none fixed left-1/2 top-[-20%] z-0 h-225 w-225 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(163,255,0,.14),transparent_65%)]" />
 
-      <header className="relative z-10 flex items-center justify-between px-6 py-7">
-        <div className="flex items-center gap-2 text-lg font-black tracking-tight">
-          <span className="h-2.5 w-2.5 rounded-full bg-lime-400" />
-          MIRROR
-        </div>
+      <header className="relative z-10 flex items-center justify-between px-6 py-6">
+  <div className="flex items-center gap-2">
+    <div className="h-2.5 w-2.5 rounded-full bg-accent" />
+    <span className="text-sm font-semibold tracking-wide text-foreground">
+      Identity Mirror
+    </span>
+  </div>
 
-        <Link
-          href="/create"
-          className="rounded-full border border-white/10 px-4 py-2 text-xs font-bold text-white/50"
-        >
-          create yours
-        </Link>
-      </header>
+  <Link
+    href="/create"
+    className="rounded-[14px] border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-secondary transition hover:border-accent hover:text-foreground"
+  >
+    Create
+  </Link>
+</header>
 
-      <section className="relative z-10 flex flex-col items-center px-6 pb-16 pt-4 text-center">
-        <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] text-lime-400">
-          private · anonymous · unlocks only at 3
+<section className="relative z-10 px-6 pb-16 pt-8 text-center">
+  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-foreground-secondary">
+    Anonymous • Honest • Social Identity
+  </p>
+
+  <h1 className="font-identity mx-auto mt-6 max-w-xl text-[2.15rem] leading-[1.05] tracking-tight text-foreground sm:text-6xl">
+    How do your friends
+    <br />
+    actually see you?
+  </h1>
+
+  <p className="mx-auto mt-6 max-w-md text-[15px] leading-7 text-foreground-secondary">
+    Create your own mirror, share one link, and discover how people really
+    perceive you through completely anonymous responses.
+  </p>
+
+  <Link
+    href="/create"
+    className="mt-10 inline-flex h-14 items-center justify-center rounded-[14px] bg-accent px-8 text-base font-semibold text-accent-foreground transition hover:opacity-95"
+  >
+    Create my mirror
+  </Link>
+
+  <p className="mt-4 text-sm text-foreground-muted">
+    Takes less than a minute
+  </p>
+
+  <div className="mt-14">
+    <div
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative mx-auto aspect-square w-[min(72vw,280px)] cursor-none overflow-hidden rounded-full border border-border bg-[linear-gradient(160deg,#23252D_0%,#181A20_55%,#101115_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:w-[320px]"
+    >
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-10 text-center">
+        <span className="text-xs uppercase tracking-[0.2em] text-foreground-secondary">
+          Identity Mirror
+        </span>
+
+        <p className="font-identity text-2xl leading-tight text-foreground">
+          Quiet
+          <br />
+          Mystery
         </p>
 
-        <h1 className="max-w-4xl text-[2.4rem] font-black leading-[1.02] tracking-tight sm:text-6xl">
-          Your friends already talk about you.{' '}
-          <span className="text-lime-400">Now you get to listen.</span>
-        </h1>
+        <span className="text-sm text-foreground-secondary">
+          Hidden until friends respond
+        </span>
+      </div>
 
-        <p className="mt-5 max-w-sm text-sm leading-7 text-white/50 sm:max-w-xl sm:text-base">
-          Send one link. They answer honestly — fully anonymous, zero names
-          attached. Once enough people respond, the mirror clears and you see
-          everything. No cap.
-        </p>
+      <div
+        className="absolute inset-0 bg-[linear-gradient(160deg,#23252D_0%,#181A20_55%,#101115_100%)]"
+        style={{
+  background: `
+    radial-gradient(
+      circle at ${spot.x}px ${spot.y}px,
+      rgba(255,90,95,0.18) 0%,
+      rgba(255,90,95,0.08) 70px,
+      transparent 140px
+    ),
+    linear-gradient(160deg,#23252D 0%,#181A20 55%,#101115 100%)
+  `,
+  WebkitMaskImage: `radial-gradient(65px at ${spot.x}px ${spot.y}px, transparent 0, transparent 36px, black 62px)`,
+  maskImage: `radial-gradient(65px at ${spot.x}px ${spot.y}px, transparent 0, transparent 36px, black 62px)`,
+}}
+      />
 
-        <div className="mt-14 flex flex-col items-center gap-5">
-          <div
-            onPointerMove={handlePointerMove}
-            onPointerLeave={handlePointerLeave}
-            className="relative aspect-square w-[min(72vw,280px)] cursor-none overflow-hidden rounded-full border-2 border-lime-400 bg-[linear-gradient(160deg,#241f3a,#0d0c17)] shadow-[0_0_40px_rgba(163,255,0,.08)] sm:w-[320px]"
-          >
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-14 text-center">
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-lime-400">
-                Your mirror
-              </span>
+      <div
+        className={`pointer-events-none absolute inset-0 flex items-center justify-center text-xs uppercase tracking-[0.18em] text-foreground-secondary transition-opacity ${
+          peeked ? 'opacity-0' : 'opacity-100'
+        }`}
+      >
+        Hover to reveal
+      </div>
+    </div>
+    <div className="mt-6 flex items-center justify-center gap-3 text-sm text-foreground-secondary">
+      <span>1 of 3 responses received</span>
 
-              <p className="font-mono text-sm leading-6 text-white">
-                "honestly? the funniest
-                <br />
-                one in the group"
-              </p>
+      <div className="flex gap-1">
+        <span className="h-2 w-2 rounded-full bg-accent" />
+        <span className="h-2 w-2 rounded-full bg-border" />
+        <span className="h-2 w-2 rounded-full bg-border" />
+      </div>
+    </div>
+  </div>
+</section>
 
-              <span className="font-mono text-[11px] text-white/45">
-                — anonymous
-              </span>
-            </div>
+      <section className="relative z-10 px-6 py-20">
+  <div className="mx-auto max-w-xl text-center">
+    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--foreground-secondary)]">
+      How it works
+    </p>
 
-            <div
-              className="absolute inset-0 bg-[linear-gradient(160deg,#263014,#11160A)]"
-              style={{
-              WebkitMaskImage: `radial-gradient(65px at ${spot.x}px ${spot.y}px, transparent 0, transparent 36px, black 62px)`,
-              maskImage: `radial-gradient(65px at ${spot.x}px ${spot.y}px, transparent 0, transparent 36px, black 62px)`,
-          }}
-        />
+    <h2 className="font-identity mt-5 text-4xl leading-tight text-[var(--foreground)]">
+      Three simple steps.
+      <br />
+      One honest identity.
+    </h2>
 
-            <div
-              className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-10 text-center font-mono text-xs tracking-wide text-white/55 transition-opacity ${
-                peeked ? 'opacity-0' : 'opacity-100'
-              }`}
-            >
-              hover to peek →
-            </div>
-          </div>
+    <p className="mt-5 text-[15px] leading-7 text-[var(--foreground-secondary)]">
+      No usernames. No comments. Just anonymous traits chosen by the people
+      who know you best.
+    </p>
+  </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs text-white/40">
-            <span>1 / 3 friends have answered</span>
-            <span className="flex gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-lime-400" />
-              <span className="h-1.5 w-1.5 rounded-full bg-white/15" />
-              <span className="h-1.5 w-1.5 rounded-full bg-white/15" />
-            </span>
-          </div>
-        </div>
+  <div className="mx-auto mt-14 grid max-w-5xl gap-5 md:grid-cols-3">
+    <div className="rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-7">
+      <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-bold text-[var(--accent-foreground)]">
+        1
+      </div>
 
-        <Link
-          href="/create"
-          className="mt-10 inline-flex items-center justify-center rounded-full bg-lime-400 px-8 py-4 text-base font-black text-black transition hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(163,255,0,.35)]"
-        >
-          start your mirror →
-        </Link>
+      <h3 className="text-lg font-semibold text-[var(--foreground)]">
+        Create your mirror
+      </h3>
 
-        <p className="mt-4 font-mono text-xs text-white/40">
-          takes 40 seconds · no signup drama
-        </p>
-      </section>
+      <p className="mt-3 text-sm leading-7 text-[var(--foreground-secondary)]">
+        Choose what you want people to describe and generate your personal
+        mirror in seconds.
+      </p>
+    </div>
 
-      <section className="relative z-10 px-6 py-16">
-        <div className="mx-auto mb-14 max-w-xl text-center">
-          <p className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-lime-400">
-            how it actually works
-          </p>
+    <div className="rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-7">
+      <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-bold text-[var(--accent-foreground)]">
+        2
+      </div>
 
-          <h2 className="text-3xl font-black tracking-tight">
-            Three steps. Zero awkwardness.
-          </h2>
-        </div>
+      <h3 className="text-lg font-semibold text-[var(--foreground)]">
+        Share with friends
+      </h3>
 
-        <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3">
-          <div className="bg-black p-8">
-            <span className="font-mono text-xs text-lime-400">01</span>
-            <h3 className="mt-5 text-xl font-black">Make your mirror</h3>
-            <p className="mt-3 text-sm leading-6 text-white/45">
-              Pick what you want feedback on — your vibe, your rizz, your red
-              flags. We turn it into one shareable link.
-            </p>
-          </div>
+      <p className="mt-3 text-sm leading-7 text-[var(--foreground-secondary)]">
+        Send one link through WhatsApp, Instagram or anywhere your friends are.
+        Every response stays anonymous.
+      </p>
+    </div>
 
-          <div className="bg-black p-8">
-            <span className="font-mono text-xs text-lime-400">02</span>
-            <h3 className="mt-5 text-xl font-black">Drop it anywhere</h3>
-            <p className="mt-3 text-sm leading-6 text-white/45">
-              Insta bio, WhatsApp group, close friends story — wherever your
-              people actually are. They tap, answer, gone.
-            </p>
-          </div>
+    <div className="rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-7">
+      <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-bold text-[var(--accent-foreground)]">
+        3
+      </div>
 
-          <div className="bg-black p-8">
-            <span className="font-mono text-xs text-lime-400">03</span>
-            <h3 className="mt-5 text-xl font-black">It clears at 3</h3>
-            <p className="mt-3 text-sm leading-6 text-white/45">
-              Once 3 people reply, the fog lifts and you see every answer.
-              Under 3, and it stays sealed forever.
-            </p>
-          </div>
-        </div>
-      </section>
+      <h3 className="text-lg font-semibold text-[var(--foreground)]">
+        Reveal your identity
+      </h3>
 
-      <section className="relative z-10 overflow-hidden py-14">
-        <p className="mb-8 text-center font-mono text-xs uppercase tracking-[0.18em] text-white/35">
-          reveals happening right now
-        </p>
+      <p className="mt-3 text-sm leading-7 text-[var(--foreground-secondary)]">
+        Once enough people respond, your identity unlocks with insights,
+        patterns and your complete social report.
+      </p>
+    </div>
+  </div>
+</section>
+      <section className="relative z-10 px-6 py-20">
+  <div className="mx-auto max-w-xl text-center">
+    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-foreground-secondary">
+      Privacy first
+    </p>
 
-        <div className="flex w-max animate-[scroll_32s_linear_infinite] gap-4">
-          {[...reveals, ...reveals].map((reveal, index) => (
-            <div
-              key={`${reveal}-${index}`}
-              className="whitespace-nowrap rounded-full border border-white/10 bg-white/4 px-6 py-3 text-sm font-semibold text-white/65"
-            >
-              {reveal}
-            </div>
-          ))}
-        </div>
-      </section>
+    <h2 className="font-identity mt-5 text-4xl leading-tight text-foreground">
+      Honest answers.
+      <br />
+      Completely anonymous.
+    </h2>
 
-      <section className="relative z-10 mx-auto max-w-3xl px-6 py-16 text-center">
-        <h2 className="text-3xl font-black leading-tight tracking-tight sm:text-4xl">
-          Not another "rate your friend" app that outs everyone.
-        </h2>
+    <p className="mt-5 text-[15px] leading-7 text-foreground-secondary">
+      Nobody can see who picked which trait. Your friends stay anonymous,
+      while you discover the patterns that define how people truly see you.
+    </p>
+  </div>
 
-        <p className="mt-5 text-base leading-7 text-white/50">
-          We hold every answer back until 3 people have responded. With fewer
-          than 3, one guess and the game is over. At 3+, nobody can
-          reverse-engineer who said what.
-        </p>
+  <div className="mx-auto mt-14 grid max-w-5xl gap-5 md:grid-cols-3">
+    <div className="rounded-[16px] border border-border bg-surface p-7">
+      <p className="text-2xl">🔒</p>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 p-5 text-left">
-            <span className="font-mono text-xs text-lime-400">NO NAMES</span>
-            <p className="mt-3 text-sm font-semibold text-white/70">
-              Answers are never linked to a profile, ever.
-            </p>
-          </div>
+      <h3 className="mt-5 text-lg font-semibold text-foreground">
+        Anonymous
+      </h3>
 
-          <div className="rounded-2xl border border-white/10 p-5 text-left">
-            <span className="font-mono text-xs text-lime-400">3 MINIMUM</span>
-            <p className="mt-3 text-sm font-semibold text-white/70">
-              Mirror stays fogged until the threshold hits.
-            </p>
-          </div>
+      <p className="mt-3 text-sm leading-7 text-foreground-secondary">
+        Nobody knows who selected which trait.
+      </p>
+    </div>
 
-          <div className="rounded-2xl border border-white/10 p-5 text-left">
-            <span className="font-mono text-xs text-lime-400">
-              YOU CONTROL IT
-            </span>
-            <p className="mt-3 text-sm font-semibold text-white/70">
-              Delete your mirror and every answer disappears with it.
-            </p>
-          </div>
-        </div>
-      </section>
+    <div className="rounded-[16px] border border-border bg-surface p-7">
+      <p className="text-2xl">👥</p>
 
-      <section className="relative z-10 px-6 py-20 text-center">
-        <h2 className="mx-auto max-w-2xl text-4xl font-black leading-tight tracking-tight">
-          Stop wondering what they’d say if you weren’t in the room.
-        </h2>
+      <h3 className="mt-5 text-lg font-semibold text-foreground">
+        Minimum 3 responses
+      </h3>
 
-        <p className="mt-5 text-white/50">Your mirror is waiting. So are they.</p>
+      <p className="mt-3 text-sm leading-7 text-foreground-secondary">
+        Your mirror unlocks only after enough people respond.
+      </p>
+    </div>
 
-        <Link
-          href="/create"
-          className="mt-8 inline-flex items-center justify-center rounded-full bg-lime-400 px-8 py-4 text-base font-black text-black"
-        >
-          create your mirror →
-        </Link>
-      </section>
+    <div className="rounded-[16px] border border-border bg-surface p-7">
+      <p className="text-2xl">🗑️</p>
 
-      <footer className="relative z-10 flex items-center justify-between border-t border-white/10 px-6 py-7 font-mono text-xs text-white/35">
-        <span>mirror</span>
-        <span>made for people who need to know</span>
-      </footer>
+      <h3 className="mt-5 text-lg font-semibold text-foreground">
+        Your mirror. Your control.
+      </h3>
 
-      <style>{`
-        @keyframes scroll {
-          from {
-            transform: translateX(0);
-          }
+      <p className="mt-3 text-sm leading-7 text-foreground-secondary">
+        Delete your mirror anytime and remove every response.
+      </p>
+    </div>
+  </div>
+</section>
 
-          to {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
+<section className="relative z-10 px-6 py-24 text-center">
+  <h2 className="font-identity mx-auto max-w-2xl text-4xl leading-tight text-foreground">
+    Ready to discover
+    <br />
+    what people never tell you?
+  </h2>
+
+  <p className="mx-auto mt-6 max-w-md text-[15px] leading-7 text-foreground-secondary">
+    Your identity is already there.
+    Your friends just need one link to reveal it.
+  </p>
+
+  <Link
+    href="/create"
+    className="mt-10 inline-flex h-14 items-center justify-center rounded-[14px] bg-accent px-8 text-base font-semibold text-accent-foreground transition hover:bg-accent-hover"
+  >
+    Create my mirror
+  </Link>
+</section>
+
+<footer className="relative z-10 border-t border-border px-6 py-8 text-center">
+  <p className="font-semibold text-foreground">
+    Identity Mirror
+  </p>
+
+  <p className="mt-2 text-sm text-foreground-secondary">
+    Made for honest friendships.
+  </p>
+</footer>
     </main>
   )
 }
